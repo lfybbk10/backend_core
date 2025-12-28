@@ -3,6 +3,7 @@ package ru.mentee.power.crm.domain;
 import org.junit.jupiter.api.Test;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
 
@@ -11,7 +12,7 @@ class LeadEqualsHashCodeTest {
     @Test
     void shouldBeReflexive_whenEqualsCalledOnSameObject() {
         // Given
-        Lead lead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), "ivan@mail.ru", "+7123", "TechCorp", "NEW");
 
         // Then: Объект равен сам себе (isEqualTo использует equals() внутри)
         assertThat(lead).isEqualTo(lead);
@@ -20,8 +21,9 @@ class LeadEqualsHashCodeTest {
     @Test
     void shouldBeSymmetric_whenEqualsCalledOnTwoObjects() {
         // Given
-        Lead firstLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
-        Lead secondLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        UUID uuid = UUID.randomUUID();
+        Lead firstLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        Lead secondLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
 
         // Then: Симметричность — порядок сравнения не важен
         assertThat(firstLead).isEqualTo(secondLead);
@@ -31,9 +33,10 @@ class LeadEqualsHashCodeTest {
     @Test
     void shouldBeTransitive_whenEqualsChainOfThreeObjects() {
         // Given
-        Lead firstLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
-        Lead secondLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
-        Lead thirdLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        UUID uuid = UUID.randomUUID();
+        Lead firstLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        Lead secondLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        Lead thirdLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
 
         // Then: Транзитивность — если A=B и B=C, то A=C
         assertThat(firstLead).isEqualTo(secondLead);
@@ -44,8 +47,9 @@ class LeadEqualsHashCodeTest {
     @Test
     void shouldBeConsistent_whenEqualsCalledMultipleTimes() {
         // Given
-        Lead firstLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
-        Lead secondLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        UUID uuid = UUID.randomUUID();
+        Lead firstLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        Lead secondLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
 
         // Then: Результат одинаковый при многократных вызовах
         assertThat(firstLead).isEqualTo(secondLead);
@@ -56,7 +60,7 @@ class LeadEqualsHashCodeTest {
     @Test
     void shouldReturnFalse_whenEqualsComparedWithNull() {
         // Given
-        Lead lead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), "ivan@mail.ru", "+7123", "TechCorp", "NEW");
 
         // Then: Объект не равен null (isNotEqualTo проверяет equals(null) = false)
         assertThat(lead).isNotEqualTo(null);
@@ -65,8 +69,9 @@ class LeadEqualsHashCodeTest {
     @Test
     void shouldHaveSameHashCode_whenObjectsAreEqual() {
         // Given
-        Lead firstLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
-        Lead secondLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        UUID uuid = UUID.randomUUID();
+        Lead firstLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        Lead secondLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
 
         // Then: Если объекты равны, то hashCode должен быть одинаковым
         assertThat(firstLead).isEqualTo(secondLead);
@@ -76,8 +81,9 @@ class LeadEqualsHashCodeTest {
     @Test
     void shouldWorkInHashMap_whenLeadUsedAsKey() {
         // Given
-        Lead keyLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
-        Lead lookupLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        UUID uuid = UUID.randomUUID();
+        Lead keyLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        Lead lookupLead = new Lead(uuid, "ivan@mail.ru", "+7123", "TechCorp", "NEW");
 
         Map<Lead, String> map = new HashMap<>();
         map.put(keyLead, "CONTACTED");
@@ -92,8 +98,8 @@ class LeadEqualsHashCodeTest {
     @Test
     void shouldNotBeEqual_whenIdsAreDifferent() {
         // Given
-        Lead firstLead = new Lead("1", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
-        Lead differentLead = new Lead("2", "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        Lead firstLead = new Lead(UUID.randomUUID(), "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        Lead differentLead = new Lead(UUID.randomUUID(), "ivan@mail.ru", "+7123", "TechCorp", "NEW");
 
         // Then: Разные id = разные объекты (isNotEqualTo использует equals() внутри)
         assertThat(firstLead).isNotEqualTo(differentLead);

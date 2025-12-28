@@ -2,26 +2,29 @@ package ru.mentee.power.crm.domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class LeadTest {
     @Test
     void shouldReturnId_whenGetIdCalled() {
         // Given
-        Lead lead = new Lead("L1", "test@example.com", "+71234567890", "TestCorp", "NEW");
+        UUID randomUUID = UUID.randomUUID();
+        Lead lead = new Lead(randomUUID, "test@example.com", "+71234567890", "TestCorp", "NEW");
 
         // When
-        String id = lead.getId();
+        UUID id = lead.getId();
 
         // Then
-        assertThat(id).isEqualTo("L1");
+        assertThat(id).isEqualTo(randomUUID);
     }
 
     // Допиши тесты для email, phone, company, status, toString
     @Test
     void shouldReturnEmail_whenGetEmailCalled() {
         // Given
-        Lead lead = new Lead("L1", "test@example.com", "+71234567890", "TestCorp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), "test@example.com", "+71234567890", "TestCorp", "NEW");
 
         // When
         String email = lead.getEmail();
@@ -33,7 +36,7 @@ class LeadTest {
     @Test
     void shouldReturnPhone_whenGetPhoneCalled() {
         // Given
-        Lead lead = new Lead("L1", "test@example.com", "+71234567890", "TestCorp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), "test@example.com", "+71234567890", "TestCorp", "NEW");
 
         // When
         String phone = lead.getPhone();
@@ -45,7 +48,7 @@ class LeadTest {
     @Test
     void shouldReturnCompany_whenGetCompanyCalled() {
         // Given
-        Lead lead = new Lead("L1", "test@example.com", "+71234567890", "TestCorp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), "test@example.com", "+71234567890", "TestCorp", "NEW");
 
         // When
         String company = lead.getCompany();
@@ -57,7 +60,7 @@ class LeadTest {
     @Test
     void shouldReturnStatus_whenGetStatusCalled() {
         // Given
-        Lead lead = new Lead("L1", "test@example.com", "+71234567890", "TestCorp", "NEW");
+        Lead lead = new Lead(UUID.randomUUID(), "test@example.com", "+71234567890", "TestCorp", "NEW");
 
         // When
         String status = lead.getStatus();
@@ -69,12 +72,13 @@ class LeadTest {
     @Test
     void shouldReturnToString_whenGetToStringCalled() {
         // Given
-        Lead lead = new Lead("L1", "test@example.com", "+71234567890", "TestCorp", "NEW");
+        UUID uuid = UUID.randomUUID();
+        Lead lead = new Lead(uuid, "test@example.com", "+71234567890", "TestCorp", "NEW");
 
         // When
         String toString = lead.toString();
 
         // Then
-        assertThat(toString).isEqualTo("Lead{id='L1', email='test@example.com', phone='+71234567890', company='TestCorp', status='NEW'}");
+        assertThat(toString).isEqualTo("Lead{id="+"'"+uuid+"'"+", email='test@example.com', phone='+71234567890', company='TestCorp', status='NEW'}");
     }
 }
