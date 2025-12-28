@@ -1,6 +1,8 @@
 package ru.mentee.power.crm.storage;
 
 import org.junit.jupiter.api.Test;
+import ru.mentee.power.crm.domain.Address;
+import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.domain.Lead;
 
 import java.util.UUID;
@@ -13,7 +15,10 @@ class LeadStorageTest {
     void shouldAddLead_whenLeadIsUnique() {
         // Given
         LeadStorage storage = new LeadStorage();
-        Lead uniqueLead = new Lead(UUID.randomUUID(), "ivan@mail.ru", "+7123", "TechCorp", "NEW");
+        UUID randomUUID = UUID.randomUUID();
+        Address address = new Address("New York", "Times Square", "123");
+        Contact contact = new Contact("John@gmail.com", "+79122543221", address);
+        Lead uniqueLead = new Lead(randomUUID, contact, "TestCorp", "NEW");
 
         // When
         boolean added = storage.add(uniqueLead);
@@ -28,8 +33,11 @@ class LeadStorageTest {
     void shouldRejectDuplicate_whenEmailAlreadyExists() {
         // Given
         LeadStorage storage = new LeadStorage();
-        Lead existingLead = new Lead(UUID.randomUUID(), "ivan@mail.ru", "+7123", "TechCorp", "NEW");
-        Lead duplicateLead = new Lead(UUID.randomUUID(), "ivan@mail.ru", "+7456", "Other", "NEW");
+        UUID randomUUID = UUID.randomUUID();
+        Address address = new Address("New York", "Times Square", "123");
+        Contact contact = new Contact("John@gmail.com", "+79122543221", address);
+        Lead existingLead = new Lead(randomUUID, contact, "TestCorp", "NEW");
+        Lead duplicateLead = new Lead(randomUUID, contact, "TestCorp", "NEW");
         storage.add(existingLead);
 
         // When
@@ -46,13 +54,20 @@ class LeadStorageTest {
         // Given: Заполни хранилище 100 лидами
         LeadStorage storage = new LeadStorage();
         for (int index = 0; index < 100; index++) {
-            storage.add(new Lead(UUID.randomUUID(), "lead" + index + "@mail.ru", "+7000", "Company", "NEW"));
+            UUID randomUUID = UUID.randomUUID();
+            Address address = new Address("New York", "Times Square", "123");
+            Contact contact = new Contact("John@gmail.com", "+79122543221", address);
+            Lead uniqueLead = new Lead(randomUUID, contact, "TestCorp", "NEW");
+            storage.add(uniqueLead);
         }
 
         // When + Then: 101-й лид должен выбросить исключение
-        Lead hundredFirstLead = new Lead(UUID.randomUUID(), "lead101@mail.ru", "+7001", "Company", "NEW");
+        UUID randomUUID = UUID.randomUUID();
+        Address address = new Address("New York", "Times Square", "123");
+        Contact contact = new Contact("John@gmail.com", "+79122543221", address);
+        Lead newLead = new Lead(randomUUID, contact, "TestCorp", "NEW");
 
-        assertThatThrownBy(() -> storage.add(hundredFirstLead))
+        assertThatThrownBy(() -> storage.add(newLead))
                 .isInstanceOf(IllegalStateException.class)
                 .hasMessageContaining("Storage is full");
     }
@@ -61,16 +76,20 @@ class LeadStorageTest {
     void shouldReturnOnlyAddedLeads_whenFindAllCalled() {
         // Given
         LeadStorage storage = new LeadStorage();
-        Lead firstLead = new Lead(UUID.randomUUID(), "ivan@mail.ru", "+7123", "TechCorp", "NEW");
-        Lead secondLead = new Lead(UUID.randomUUID(), "maria@startup.io", "+7456", "StartupLab", "NEW");
-        storage.add(firstLead);
-        storage.add(secondLead);
+
+        Address address = new Address("New York", "Times Square", "123");
+        Contact contact1 = new Contact("John@gmail.com", "+79122543221", address);
+        Contact contact2 = new Contact("Test@gmail.com", "+79122213221", address);
+        Lead lead1 = new Lead(UUID.randomUUID(), contact1, "TestCorp", "NEW");
+        Lead lead2 = new Lead(UUID.randomUUID(), contact2, "TestCorp", "NEW");
+        storage.add(lead1);
+        storage.add(lead2);
 
         // When
         Lead[] result = storage.findAll();
 
         // Then
         assertThat(result).hasSize(2);
-        assertThat(result).containsExactly(firstLead, secondLead);
+        assertThat(result).containsExactly(lead1, lead2);
     }
 }
