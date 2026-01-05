@@ -1,5 +1,6 @@
 package ru.mentee.power.crm.domain;
 
+import java.util.Objects;
 import java.util.UUID;
 
 public record Lead(UUID id, Contact contact, String company, String status) {
@@ -15,5 +16,10 @@ public record Lead(UUID id, Contact contact, String company, String status) {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Lead && ((Lead) obj).id.equals(id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
     }
 }
