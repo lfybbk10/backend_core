@@ -25,9 +25,9 @@ class InMemoryLeadRepositoryTest {
         Contact contact = new Contact("John@gmail.com", "+79122543221", address);
         Lead lead = new Lead(randomUUID, contact, "TestCorp", "NEW");
 
-        repository.add(lead);
+        repository.save(lead);
         assertThat(repository.findAll().size()).isEqualTo(1);
-        repository.add(lead);
+        repository.save(lead);
         assertThat(repository.findAll().size()).isEqualTo(1);
     }
 
@@ -38,9 +38,9 @@ class InMemoryLeadRepositoryTest {
         Contact contact = new Contact("John@gmail.com", "+79122543221", address);
         Lead lead = new Lead(randomUUID, contact, "TestCorp", "NEW");
 
-        repository.add(lead);
+        repository.save(lead);
         assertThat(repository.findAll().size()).isEqualTo(1);
-        repository.remove(lead);
+        repository.delete(randomUUID);
         assertThat(repository.findAll().size()).isEqualTo(0);
     }
 
@@ -51,7 +51,7 @@ class InMemoryLeadRepositoryTest {
         Contact contact = new Contact("John@gmail.com", "+79122543221", address);
         Lead lead = new Lead(randomUUID, contact, "TestCorp", "NEW");
 
-        repository.add(lead);
+        repository.save(lead);
         assertThat(repository.findAll().size()).isEqualTo(1);
         assertThat(repository.findById(randomUUID).get()).isEqualTo(lead);
     }
@@ -64,8 +64,8 @@ class InMemoryLeadRepositoryTest {
         Lead lead1 = new Lead(UUID.randomUUID(), contact1, "TestCorp", "NEW");
         Lead lead2 = new Lead(UUID.randomUUID(), contact2, "TestCorp", "NEW");
 
-        repository.add(lead1);
-        repository.add(lead2);
+        repository.save(lead1);
+        repository.save(lead2);
         assertThat(repository.findAll().size()).isEqualTo(2);
     }
 }
