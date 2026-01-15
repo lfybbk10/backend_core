@@ -1,6 +1,11 @@
 plugins {
     id 'java'
     id 'jacoco'
+    id 'application'
+}
+
+application {
+    mainClass = 'ru.mentee.power.crm.Main'
 }
 
 group = 'ru.mentee.power'
