@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'jacoco'
     id 'application'
+    id 'gg.jte.gradle' version '3.1.15'
 }
 
 application {
@@ -21,6 +22,7 @@ ext {
     lombokVersion = '1.18.40'
     servletVersion = '6.1.0'
     tomcatVersion = '11.0.1'
+    jteVersion = '3.1.15'
 }
 
 dependencies {
@@ -47,6 +49,15 @@ dependencies {
 
     implementation "jakarta.servlet:jakarta.servlet-api:${servletVersion}"
     implementation "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}"
+
+    implementation "gg.jte:jte:${jteVersion}"
+    implementation "gg.jte:jte-runtime:${jteVersion}"
+}
+
+jte {
+    sourceDirectory = file("src/main/jte").toPath()
+    contentType = "Html"
+    binaryStaticContent = false
 }
 
 test {
