@@ -1,10 +1,12 @@
 package ru.mentee.power.crm.infrastructure;
 
+import org.springframework.stereotype.Repository;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.repository.LeadRepository;
 
 import java.util.*;
 
+@Repository
 public class InMemoryLeadRepository implements LeadRepository {
     private final Map<UUID, Lead> storage = new HashMap<>();
     private final Map<String, UUID> emailIndex = new HashMap<>();

@@ -1,6 +1,10 @@
 server:
   port: 8081
 
+gg:
+  jte:
+    developmentMode: true
+
 spring:
   application:
     name: mentee-power-crm
