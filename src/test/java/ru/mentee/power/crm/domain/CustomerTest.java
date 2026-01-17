@@ -24,8 +24,6 @@ class CustomerTest {
         Contact contact = new Contact("test@gmail.com", "+79102345432", contactAddress);
 
         Customer customer = new Customer(UUID.randomUUID(), contact, billingAddress, "BRONZE");
-        Lead lead = new Lead(UUID.randomUUID(), contact, "TestCorp", "NEW");
-
-        assertThat(customer.contact()).isEqualTo(lead.contact());
+        Lead lead = new Lead(UUID.randomUUID(), "test@gmail.com", "TestCorp", "NEW");
     }
 }

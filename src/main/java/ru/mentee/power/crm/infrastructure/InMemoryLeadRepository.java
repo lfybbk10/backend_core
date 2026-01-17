@@ -15,7 +15,7 @@ public class InMemoryLeadRepository implements LeadRepository {
     public Lead save(Lead lead) {
         // Просто сохраняем — никакой бизнес-логики!
         storage.put(lead.id(), lead);
-        emailIndex.put(lead.contact().email(), lead.id());
+        emailIndex.put(lead.email(), lead.id());
         return lead;
     }
 
@@ -42,7 +42,7 @@ public class InMemoryLeadRepository implements LeadRepository {
     public void delete(UUID id) {
         Lead lead = storage.remove(id);
         if (lead != null) {
-            emailIndex.remove(lead.contact().email());
+            emailIndex.remove(lead.email());
         }
     }
 }
