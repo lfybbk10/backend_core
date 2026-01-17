@@ -16,10 +16,10 @@ public class Application {
     CommandLineRunner seedLeads(LeadService leadService) {
         return args -> {
             leadService.addLead("test1@mail.com", "comp1", "NEW");
-            leadService.addLead("test2@mail.com", "comp2", "NEW");
-            leadService.addLead("test3@mail.com", "comp3", "NEW");
+            leadService.addLead("test2@mail.com", "comp2", "CONVERTED");
+            leadService.addLead("test3@mail.com", "comp3", "CONVERTED");
             leadService.addLead("test4@mail.com", "comp2", "NEW");
-            leadService.addLead("test5@mail.com", "comp1", "NEW");
+            leadService.addLead("test5@mail.com", "comp1", "QUALIFIED");
         };
     }
 }

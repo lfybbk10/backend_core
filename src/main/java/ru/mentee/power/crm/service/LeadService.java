@@ -9,6 +9,8 @@ import ru.mentee.power.crm.repository.LeadRepository;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 @Service
 public class LeadService {
 
@@ -53,5 +55,9 @@ public class LeadService {
 
     public Optional<Lead> findByEmail(String email) {
         return repository.findByEmail(email);
+    }
+
+    public List<Lead> findByStatus(String status) {
+        return repository.findAll().stream().filter(lead -> lead.status().equals(status)).collect(Collectors.toList());
     }
 }
