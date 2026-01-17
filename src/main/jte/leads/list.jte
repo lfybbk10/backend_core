@@ -32,6 +32,13 @@
         </p>
     @endif
 
+    <a
+        href="/leads/new"
+        class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+      >
+        + Добавить лида
+      </a>
+
     <h2 class="text-2xl font-bold mb-4">Lead List</h2>
 
     <table class="min-w-full bg-white border border-gray-200">
@@ -45,7 +52,7 @@
         <tbody>
             @for(var lead : leads)
                 <tr class="border-t hover:bg-gray-50">
-                    <td class="px-4 py-2">${lead.contact().email()}</td>
+                    <td class="px-4 py-2">${lead.email()}</td>
                     <td class="px-4 py-2">${lead.company()}</td>
                     <td class="px-4 py-2">
                         <span class="px-2 py-1 rounded text-sm bg-green-100 text-green-800">

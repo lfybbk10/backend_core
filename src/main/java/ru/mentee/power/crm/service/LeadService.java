@@ -36,7 +36,7 @@ public class LeadService {
         // Создаём нового лида
         Lead lead = new Lead(
                 UUID.randomUUID(),
-                new Contact(email, "+7", new Address("city", "street", "zip")),
+                email,
                 company,
                 status
         );

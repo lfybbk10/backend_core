@@ -19,8 +19,7 @@ class LeadRepositoryTest {
     void shouldDeduplicateLeadsById() {
         UUID randomUUID = UUID.randomUUID();
         Address address = new Address("New York", "Times Square", "123");
-        Contact contact = new Contact("John@gmail.com", "+79122543221", address);
-        Lead lead = new Lead(randomUUID, contact, "TestCorp", "NEW");
+        Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
 
         LeadRepository repo = new LeadRepository();
         repo.add(lead);
@@ -34,10 +33,8 @@ class LeadRepositoryTest {
     @DisplayName("Should allow different leads with different ids")
     void shouldAllowDifferentLeads() {
         Address address = new Address("New York", "Times Square", "123");
-        Contact contact1 = new Contact("John@gmail.com", "+79122543221", address);
-        Contact contact2 = new Contact("Test@gmail.com", "+79122213221", address);
-        Lead lead1 = new Lead(UUID.randomUUID(), contact1, "TestCorp", "NEW");
-        Lead lead2 = new Lead(UUID.randomUUID(), contact2, "TestCorp", "NEW");
+        Lead lead1 = new Lead(UUID.randomUUID(), "John@gmail.com", "TestCorp", "NEW");
+        Lead lead2 = new Lead(UUID.randomUUID(), "Test@gmail.com", "TestCorp", "NEW");
 
         LeadRepository repo = new LeadRepository();
         assertThat(repo.add(lead1)).isTrue();
@@ -50,8 +47,7 @@ class LeadRepositoryTest {
     void shouldFindExistingLead() {
         UUID randomUUID = UUID.randomUUID();
         Address address = new Address("New York", "Times Square", "123");
-        Contact contact = new Contact("John@gmail.com", "+79122543221", address);
-        Lead lead = new Lead(randomUUID, contact, "TestCorp", "NEW");
+        Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
 
         LeadRepository repo = new LeadRepository();
         repo.add(lead);
@@ -64,8 +60,7 @@ class LeadRepositoryTest {
     void shouldReturnUnmodifiableSet() {
         UUID randomUUID = UUID.randomUUID();
         Address address = new Address("New York", "Times Square", "123");
-        Contact contact = new Contact("John@gmail.com", "+79122543221", address);
-        Lead lead = new Lead(randomUUID, contact, "TestCorp", "NEW");
+        Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
 
         LeadRepository repo = new LeadRepository();
         repo.add(lead);
@@ -81,8 +76,7 @@ class LeadRepositoryTest {
         for (int i = 0; i<10000; i++) {
             UUID randomUUID = UUID.randomUUID();
             Address address = new Address("New York", "Times Square", "123");
-            Contact contact = new Contact("John@gmail.com", "+79122543221", address);
-            Lead lead = new Lead(randomUUID, contact, "TestCorp", "NEW");
+            Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
             leadSet.add(lead);
             leadList.add(lead);
         }
@@ -91,8 +85,7 @@ class LeadRepositoryTest {
         for (int i = 0; i < 1000; i++){
             UUID randomUUID = UUID.randomUUID();
             Address address = new Address("New York", "Times Square", "123");
-            Contact contact = new Contact("John@gmail.com", "+79122543221", address);
-            Lead lead = new Lead(randomUUID, contact, "TestCorp", "NEW");
+            Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
             leadSet.contains(lead);
         }
         long duration = System.nanoTime() - start;
@@ -102,8 +95,7 @@ class LeadRepositoryTest {
         for (int i = 0; i < 1000; i++){
             UUID randomUUID = UUID.randomUUID();
             Address address = new Address("New York", "Times Square", "123");
-            Contact contact = new Contact("John@gmail.com", "+79122543221", address);
-            Lead lead = new Lead(randomUUID, contact, "TestCorp", "NEW");
+            Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
             leadList.contains(lead);
         }
         duration = System.nanoTime() - start;

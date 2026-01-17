@@ -47,7 +47,7 @@ class LeadServiceMockTest {
         verify(mockRepository, times(1)).save(any(Lead.class));
 
         // Then: проверяем результат
-        assertThat(result.contact().email()).isEqualTo("new@example.com");
+        assertThat(result.email()).isEqualTo("new@example.com");
     }
 
     @Test
@@ -55,7 +55,7 @@ class LeadServiceMockTest {
         // Given: Repository возвращает существующий Lead
         Lead existingLead = new Lead(
                 UUID.randomUUID(),
-                new Contact("existing@example.com", "+7", new Address("city", "street", "zip")),
+                "existing@example.com",
                 "Existing Company",
                 "CONVERTED"
         );
