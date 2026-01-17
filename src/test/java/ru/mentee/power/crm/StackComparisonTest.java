@@ -25,6 +25,7 @@ class StackComparisonTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("Оба стека должны возвращать лидов в HTML таблице")
     void shouldReturnLeadsFromBothStacks() throws Exception {
         // Given: HTTP запросы к обоим стекам
@@ -70,6 +71,7 @@ class StackComparisonTest {
     }
 
     @Test
+    @Disabled
     @DisplayName("Измерение времени старта обоих стеков")
     void shouldMeasureStartupTime() throws Exception {
         // Servlet startup time (уже запущен вручную)

@@ -100,4 +100,96 @@ class LeadServiceTest {
         // Then
         assertThat(result).isEmpty();
     }
+
+    @Test
+    void shouldReturnOnlyNewLeads_whenFindByStatusNew() {
+        // Given
+        service.addLead("one@example.com", "Company 1", "NEW");
+        service.addLead("two@example.com", "Company 2", "NEW");
+        service.addLead("three@example.com", "Company 1", "QUALIFIED");
+        service.addLead("four@example.com", "Company 2", "CONVERTED");
+        service.addLead("five@example.com", "Company 1", "NEW");
+        service.addLead("six@example.com", "Company 2", "QUALIFIED");
+        service.addLead("seven@example.com", "Company 2", "CONVERTED");
+        service.addLead("eight@example.com", "Company 2", "CONVERTED");
+        service.addLead("nine@example.com", "Company 2", "CONVERTED");
+        service.addLead("ten@example.com", "Company 2", "CONVERTED");
+
+        LeadService leadService = new LeadService(repository);
+
+        // When
+        List<Lead> result = leadService.findByStatus("NEW");
+
+        // Then
+        assertThat(result).hasSize(3);
+        assertThat(result).allMatch(lead -> lead.status().equals("NEW"));
+    }
+
+    @Test
+    void shouldReturnEmptyList_whenNoLeadsWithStatus() {
+        // Given: repository с лидами, но НЕТ QUALIFIED
+        service.addLead("one@example.com", "Company 1", "NEW");
+        service.addLead("two@example.com", "Company 2", "NEW");
+        service.addLead("four@example.com", "Company 2", "CONVERTED");
+        service.addLead("five@example.com", "Company 1", "NEW");
+        service.addLead("seven@example.com", "Company 2", "CONVERTED");
+        service.addLead("eight@example.com", "Company 2", "CONVERTED");
+        service.addLead("nine@example.com", "Company 2", "CONVERTED");
+        service.addLead("ten@example.com", "Company 2", "CONVERTED");
+
+        LeadService leadService = new LeadService(repository);
+
+        // When: findByStatus(QUALIFIED)
+        List<Lead> result = leadService.findByStatus("QUALIFIED");
+        // Then: пустой список (size 0)
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void shouldReturnOnlyConvertedLeads_whenFindByStatusConverted() {
+        // Given
+        service.addLead("one@example.com", "Company 1", "NEW");
+        service.addLead("two@example.com", "Company 2", "NEW");
+        service.addLead("three@example.com", "Company 1", "QUALIFIED");
+        service.addLead("four@example.com", "Company 2", "CONVERTED");
+        service.addLead("five@example.com", "Company 1", "NEW");
+        service.addLead("six@example.com", "Company 2", "QUALIFIED");
+        service.addLead("seven@example.com", "Company 2", "CONVERTED");
+        service.addLead("eight@example.com", "Company 2", "CONVERTED");
+        service.addLead("nine@example.com", "Company 2", "CONVERTED");
+        service.addLead("ten@example.com", "Company 2", "CONVERTED");
+
+        LeadService leadService = new LeadService(repository);
+
+        // When
+        List<Lead> result = leadService.findByStatus("CONVERTED");
+
+        // Then
+        assertThat(result).hasSize(5);
+        assertThat(result).allMatch(lead -> lead.status().equals("CONVERTED"));
+    }
+
+    @Test
+    void shouldReturnOnlyQualifiedLeads_whenFindByStatusQualified() {
+        // Given
+        service.addLead("one@example.com", "Company 1", "NEW");
+        service.addLead("two@example.com", "Company 2", "NEW");
+        service.addLead("three@example.com", "Company 1", "QUALIFIED");
+        service.addLead("four@example.com", "Company 2", "CONVERTED");
+        service.addLead("five@example.com", "Company 1", "NEW");
+        service.addLead("six@example.com", "Company 2", "QUALIFIED");
+        service.addLead("seven@example.com", "Company 2", "CONVERTED");
+        service.addLead("eight@example.com", "Company 2", "CONVERTED");
+        service.addLead("nine@example.com", "Company 2", "CONVERTED");
+        service.addLead("ten@example.com", "Company 2", "CONVERTED");
+
+        LeadService leadService = new LeadService(repository);
+
+        // When
+        List<Lead> result = leadService.findByStatus("QUALIFIED");
+
+        // Then
+        assertThat(result).hasSize(2);
+        assertThat(result).allMatch(lead -> lead.status().equals("QUALIFIED"));
+    }
 }
