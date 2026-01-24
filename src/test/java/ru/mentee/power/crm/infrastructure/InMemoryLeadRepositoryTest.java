@@ -3,8 +3,8 @@ package ru.mentee.power.crm.infrastructure;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.mentee.power.crm.domain.Address;
-import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.domain.Lead;
+import ru.mentee.power.crm.spring.repository.InMemoryLeadRepository;
 
 import java.util.UUID;
 

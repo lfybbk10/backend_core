@@ -1,8 +1,7 @@
-package ru.mentee.power.crm.infrastructure;
+package ru.mentee.power.crm.spring.repository;
 
 import org.springframework.stereotype.Repository;
 import ru.mentee.power.crm.domain.Lead;
-import ru.mentee.power.crm.repository.LeadRepository;
 
 import java.util.*;
 
