@@ -5,10 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import ru.mentee.power.crm.domain.Address;
-import ru.mentee.power.crm.domain.Contact;
 import ru.mentee.power.crm.domain.Lead;
-import ru.mentee.power.crm.repository.LeadRepository;
+import ru.mentee.power.crm.spring.repository.LeadRepository;
+import ru.mentee.power.crm.spring.service.LeadService;
 
 import java.util.Optional;
 import java.util.UUID;
