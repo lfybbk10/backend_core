@@ -59,6 +59,14 @@
                             ${lead.status()}
                         </span>
                     </td>
+                    <td class="px-4 py-2">
+                    <a
+                            href="/leads/${lead.id().toString()}/edit"
+                            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                          >
+                            + Редактировать
+                          </a>
+                    </td>
                 </tr>
             @endfor
         </tbody>
