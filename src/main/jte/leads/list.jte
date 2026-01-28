@@ -60,12 +60,16 @@
                         </span>
                     </td>
                     <td class="px-4 py-2">
-                    <a
-                            href="/leads/${lead.id().toString()}/edit"
-                            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-                          >
-                            + Редактировать
-                          </a>
+                    <a href="/leads/${lead.id().toString()}/edit"
+                            class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+                            Редактировать
+                    </a>
+                    <form method="post" action="/leads/${lead.id().toString()}/delete" class="inline"
+                          onclick="return confirm('Удалить лида ${lead.email()}?')">
+                      <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+                        Удалить
+                      </button>
+                    </form>
                     </td>
                 </tr>
             @endfor
