@@ -3,7 +3,9 @@ package ru.mentee.power.crm.spring.service;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
@@ -75,6 +77,16 @@ public class LeadService {
         }
         else{
             throw new IllegalStateException("Lead with id " + id + " not found");
+        }
+    }
+
+    public void delete(UUID id) {
+        Optional<Lead> existing = repository.findById(id);
+        if (existing.isPresent()) {
+            repository.delete(id);
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lead with id " + id + " not found");
         }
     }
 }
