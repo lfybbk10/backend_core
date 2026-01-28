@@ -1,13 +1,16 @@
 package ru.mentee.power.crm.spring.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.service.LeadService;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
@@ -38,5 +41,23 @@ public class LeadController {
     public String createLead(@ModelAttribute Lead lead) {
         leadService.addLead(lead.email(), lead.company(), lead.status());
         return "redirect:/leads"; // заменить на redirect:/leads
+    }
+
+    @GetMapping("/leads/{id}/edit")
+    public String showEditForm(@PathVariable UUID id, Model model) {
+        Lead lead = leadService.findById(id).orElse(null);
+        if(lead != null) {
+            model.addAttribute("lead", lead);
+            return "leads/edit";
+        }
+        else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lead not found");
+        }
+    }
+
+    @PostMapping("/leads/{id}")
+    public String updateLead(@ModelAttribute Lead lead, @PathVariable UUID id) {
+        leadService.update(id, lead);
+        return "redirect:/leads";
     }
 }

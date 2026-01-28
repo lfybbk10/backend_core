@@ -67,4 +67,14 @@ public class LeadService {
     public List<Lead> findByStatus(String status) {
         return repository.findAll().stream().filter(lead -> lead.status().equals(status)).collect(Collectors.toList());
     }
+
+    public Lead update(UUID id, Lead updatedLead){
+        Optional<Lead> existing = repository.findById(id);
+        if (existing.isPresent()) {
+            return repository.save(updatedLead);
+        }
+        else{
+            throw new IllegalStateException("Lead with id " + id + " not found");
+        }
+    }
 }
