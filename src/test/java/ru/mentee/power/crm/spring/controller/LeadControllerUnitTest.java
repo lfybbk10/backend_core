@@ -6,19 +6,23 @@ import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.server.ResponseStatusException;
+import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.MockLeadService;
 import org.junit.jupiter.api.Test;
 import ru.mentee.power.crm.spring.service.LeadService;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
+import static org.hamcrest.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(controllers = LeadController.class)
 class LeadControllerUnitTest {
@@ -84,5 +88,50 @@ class LeadControllerUnitTest {
                 );
 
         verify(leadService).delete(nonexistent);
+    }
+
+    @Test
+    void shouldReturnLeadsWithTest1WithQuery() throws Exception {
+        String search = "test1";
+        when(leadService.findLeads(search, "")).
+                thenReturn(Arrays.asList(new Lead(UUID.randomUUID(), "test1@mail.ru", "c", "NEW")));
+
+        mockMvc.perform(get("/leads?search=test1"))
+                .andExpect(model().attribute("leads", everyItem(
+                        hasProperty("email", containsStringIgnoringCase("test1")))));
+    }
+
+    @Test
+    void ShouldReturnAllLeads() throws Exception {
+
+        Lead testLead1 = new Lead(UUID.randomUUID(), "test1", "c", "NEW");
+        Lead testLead2 = new Lead(UUID.randomUUID(), "test2", "c", "NEW");
+        when(leadService.findLeads(null, null))
+            .thenReturn(Arrays.asList(testLead1, testLead2));
+
+        mockMvc.perform(get("/leads"))
+                .andExpect(model().attribute("leads", containsInAnyOrder(testLead1, testLead2)));
+    }
+
+    @Test
+    void shouldReturnLeadsWithTest2WithCombinedQuery() throws Exception {
+        String search = "test1";
+        String status = "NEW";
+
+        when(leadService.findLeads(search, status))
+                .thenReturn(List.of(new Lead(UUID.randomUUID(), "test1@mail.ru", "c", "NEW")));
+
+        MvcResult res = mockMvc.perform(get("/leads")
+                        .param("search", search)
+                        .param("status", status))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        @SuppressWarnings("unchecked")
+        List<Lead> leads = (List<Lead>) res.getModelAndView().getModel().get("leads");
+
+        assertThat(leads).isNotEmpty();
+        assertThat(leads).allMatch(l -> l.email().toLowerCase().contains("test1"));
+        assertThat(leads).allMatch(l -> l.status().contains("NEW"));
     }
 }

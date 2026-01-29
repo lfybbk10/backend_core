@@ -24,10 +24,13 @@ public class LeadController {
     }
 
     @GetMapping("/leads")
-    public String showLeads(@RequestParam(required = false) String status, Model model) {
-        List<Lead> leads = status == null ? leadService.findAll() : leadService.findByStatus(status);
+    public String showLeads(@RequestParam(required=false) String search,
+                            @RequestParam(required = false) String status,
+                            Model model) {
+        List<Lead> leads = leadService.findLeads(search, status);
         model.addAttribute("leads", leads);
-        model.addAttribute("currentFilter", status);
+        model.addAttribute("search", search != null ? search : "");
+        model.addAttribute("status", status != null ? status : "");
         return "leads/list";
     }
 
@@ -66,4 +69,6 @@ public class LeadController {
         leadService.delete(id);
         return "redirect:/leads";
     }
+
+
 }

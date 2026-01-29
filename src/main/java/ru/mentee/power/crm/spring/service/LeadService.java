@@ -9,10 +9,12 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class LeadService {
@@ -68,6 +70,16 @@ public class LeadService {
 
     public List<Lead> findByStatus(String status) {
         return repository.findAll().stream().filter(lead -> lead.status().equals(status)).collect(Collectors.toList());
+    }
+
+    public List<Lead> findLeads(String search, String status){
+        List<Lead> leads = repository.findAll();
+        Stream<Lead> searchStream = leads.stream().filter(lead ->
+                search == null || lead.email().toLowerCase().contains(search.toLowerCase()));
+        Stream<Lead> statusStream = searchStream.filter(lead ->
+                status == null || status.isEmpty() || lead.status().equalsIgnoreCase(status));
+
+        return statusStream.toList();
     }
 
     public Lead update(UUID id, Lead updatedLead){
