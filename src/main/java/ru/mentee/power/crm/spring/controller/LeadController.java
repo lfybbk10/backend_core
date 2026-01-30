@@ -1,9 +1,11 @@
 package ru.mentee.power.crm.spring.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.domain.Lead;
@@ -41,9 +43,12 @@ public class LeadController {
     }
 
     @PostMapping("/leads")
-    public String createLead(@ModelAttribute Lead lead) {
+    public String createLead(@Valid @ModelAttribute Lead lead, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "leads/create";
+        }
         leadService.addLead(lead.email(), lead.company(), lead.status());
-        return "redirect:/leads"; // заменить на redirect:/leads
+        return "redirect:/leads";
     }
 
     @GetMapping("/leads/{id}/edit")
@@ -59,7 +64,10 @@ public class LeadController {
     }
 
     @PostMapping("/leads/{id}")
-    public String updateLead(@ModelAttribute Lead lead, @PathVariable UUID id) {
+    public String updateLead(@Valid @ModelAttribute Lead lead, BindingResult bindingResult, @PathVariable UUID id) {
+        if(bindingResult.hasErrors()) {
+            return "leads/edit";
+        }
         leadService.update(id, lead);
         return "redirect:/leads";
     }

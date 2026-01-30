@@ -134,4 +134,28 @@ class LeadControllerUnitTest {
         assertThat(leads).allMatch(l -> l.email().toLowerCase().contains("test1"));
         assertThat(leads).allMatch(l -> l.status().contains("NEW"));
     }
+
+    @Test
+    void leadsWithEmptyCompanyShouldReturnError() throws Exception {
+        mockMvc.perform(post("/leads").param("company", "").
+                        param("email", "test@test.com").param("status", "NEW"))
+                .andExpect(view().name("leads/create"))
+                .andExpect(model().attributeHasFieldErrors("lead", "company"));
+    }
+
+    @Test
+    void leadsWithInvalidEmailShouldReturnError() throws Exception {
+        mockMvc.perform(post("/leads").param("company", "comp").
+                        param("email", "test").param("status", "NEW"))
+                .andExpect(view().name("leads/create"))
+                .andExpect(model().attributeHasFieldErrors("lead", "email"));
+    }
+
+    @Test
+    void leadsWithValidDataShouldRedirect() throws Exception {
+        mockMvc.perform(post("/leads").param("company", "comp").
+                        param("email", "test@mail.com").param("status", "NEW"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/leads"));
+    }
 }
