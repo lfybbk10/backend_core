@@ -1,13 +1,16 @@
 package ru.mentee.power.crm.domain;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+
 import java.util.Objects;
 import java.util.UUID;
 
-public record Lead(UUID id, String email, String company, String status) {
+public record Lead(UUID id,
+                   @NotBlank(message = "Email обязателен") @Email(message = "Некорректный формат email") String email,
+                   @NotBlank(message = "Компания обязательна") String company,
+                   @NotBlank(message = "Статус обязателен") String status) {
     public Lead {
-//        if(id == null || email == null || status == null) {
-//            throw new NullPointerException();
-//        }
         if(!status.equals("NEW") && !status.equals("QUALIFIED") && !status.equals("CONVERTED")) {
             throw new IllegalArgumentException();
         }

@@ -1,4 +1,6 @@
 @param ru.mentee.power.crm.domain.Lead lead
+@param org.springframework.validation.BindingResult errors
+
 
 @template.layout.main(
   content = @`
@@ -7,7 +9,7 @@
 
       <form action="/leads" method="post" class="space-y-4">
         <!-- Email -->
-        <div>
+        <div class="mb-4">
           <label for="email" class="block text-sm font-medium text-gray-700 mb-1">
             Email
           </label>
@@ -16,14 +18,19 @@
             id="email"
             name="email"
             required
-            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+            class="${errors != null && errors.hasFieldErrors("email") ? "border-red-500" : "border-gray-300"}"
             placeholder="example@company.com"
           />
+          @if(errors != null && errors.hasFieldErrors("email"))
+            <p class="text-red-600 text-sm mt-1">
+              ${errors.getFieldError("email").getDefaultMessage()}
+            </p>
+          @endif
         </div>
 
 
         <!-- Company -->
-                <div>
+                <div class="mb-4">
                   <label for="company" class="block text-sm font-medium text-gray-700 mb-1">
                     Company
                   </label>
@@ -32,9 +39,14 @@
                     id="company"
                     name="company"
                     required
-                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500"
+                    class="${errors != null && errors.hasFieldErrors("company") ? "border-red-500" : "border-gray-300"}"
                     placeholder="company"
                   />
+                  @if(errors != null && errors.hasFieldErrors("company"))
+                              <p class="text-red-600 text-sm mt-1">
+                                ${errors.getFieldError("company").getDefaultMessage()}
+                              </p>
+                            @endif
                 </div>
 
 

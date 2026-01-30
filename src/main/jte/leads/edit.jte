@@ -1,6 +1,10 @@
 @import ru.mentee.power.crm.domain.Lead
 @param Lead lead
 
+@param org.springframework.validation.BindingResult errors
+
+
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -26,9 +30,14 @@
           name="email"
           type="email"
           value="${lead.email()}"
-          class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          class="${errors != null && errors.hasFieldErrors("email") ? "border-red-500" : "border-gray-300"}"
           placeholder="ivan@example.com"
           required>
+          @if(errors != null && errors.hasFieldErrors("email"))
+                      <p class="text-red-600 text-sm mt-1">
+                        ${errors.getFieldError("email").getDefaultMessage()}
+                      </p>
+                    @endif
       </div>
 
       <!-- Company -->
@@ -39,9 +48,14 @@
                 name="company"
                 type="text"
                 value="${lead.company()}"
-                class="w-full rounded border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="${errors != null && errors.hasFieldErrors("company") ? "border-red-500" : "border-gray-300"}"
                 placeholder="Company"
                 required>
+                @if(errors != null && errors.hasFieldErrors("company"))
+                                              <p class="text-red-600 text-sm mt-1">
+                                                ${errors.getFieldError("company").getDefaultMessage()}
+                                              </p>
+                                            @endif
             </div>
 
       <!-- Status -->
