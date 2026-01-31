@@ -1,6 +1,7 @@
 package ru.mentee.power.crm.spring.service;
 
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,15 +19,10 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
+@RequiredArgsConstructor
 @Service
 public class LeadService {
     private final LeadRepository repository;
-
-    // DI через конструктор — не создаём repository внутри!
-    public LeadService(LeadRepository repository) {
-        this.repository = repository;
-        log.info("LeadService constructor called");
-    }
 
     @PostConstruct
     void init() {
