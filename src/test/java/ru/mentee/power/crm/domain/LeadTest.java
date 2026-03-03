@@ -15,7 +15,7 @@ class LeadTest {
         Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
 
         // When
-        UUID id = lead.id();
+        UUID id = lead.getId();
 
         // Then
         assertThat(id).isEqualTo(randomUUID);
@@ -29,7 +29,7 @@ class LeadTest {
         Address address = new Address("New York", "Times Square", "123");
         Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
         // When
-        String email = lead.email();
+        String email = lead.getEmail();
 
         // Then
         assertThat(email).isEqualTo("John@gmail.com");
@@ -42,7 +42,7 @@ class LeadTest {
         Address address = new Address("New York", "Times Square", "123");
         Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
         // When
-        String company = lead.company();
+        String company = lead.getCompany();
 
         // Then
         assertThat(company).isEqualTo("TestCorp");
@@ -55,7 +55,7 @@ class LeadTest {
         Address address = new Address("New York", "Times Square", "123");
         Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
         // When
-        String status = lead.status();
+        String status = lead.getStatus();
 
         // Then
         assertThat(status).isEqualTo("NEW");

@@ -47,7 +47,7 @@ public class LeadController {
         if (bindingResult.hasErrors()) {
             return "leads/create";
         }
-        leadService.addLead(lead.email(), lead.company(), lead.status());
+        leadService.addLead(lead.getEmail(), lead.getCompany(), lead.getStatus());
         return "redirect:/leads";
     }
 
