@@ -131,8 +131,8 @@ class LeadControllerUnitTest {
         List<Lead> leads = (List<Lead>) res.getModelAndView().getModel().get("leads");
 
         assertThat(leads).isNotEmpty();
-        assertThat(leads).allMatch(l -> l.email().toLowerCase().contains("test1"));
-        assertThat(leads).allMatch(l -> l.status().contains("NEW"));
+        assertThat(leads).allMatch(l -> l.getEmail().toLowerCase().contains("test1"));
+        assertThat(leads).allMatch(l -> l.getStatus().contains("NEW"));
     }
 
     @Test

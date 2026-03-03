@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 
+
 class LeadServiceTest {
 
     private LeadService service;
@@ -19,7 +20,6 @@ class LeadServiceTest {
 
     @BeforeEach
     void setUp() {
-        repository = new InMemoryLeadRepository();
         service = new LeadService(repository);
     }
 
@@ -34,10 +34,10 @@ class LeadServiceTest {
 
         // Then
         assertThat(result).isNotNull();
-        assertThat(result.email()).isEqualTo(email);
-        assertThat(result.company()).isEqualTo(company);
-        assertThat(result.status()).isEqualTo("NEW");
-        assertThat(result.id()).isNotNull();
+        assertThat(result.getEmail()).isEqualTo(email);
+        assertThat(result.getCompany()).isEqualTo(company);
+        assertThat(result.getStatus()).isEqualTo("NEW");
+        assertThat(result.getId()).isNotNull();
     }
 
     @Test
@@ -73,11 +73,11 @@ class LeadServiceTest {
         Lead created = service.addLead("find@example.com", "Company", "NEW");
 
         // When
-        Optional<Lead> result = service.findById(created.id());
+        Optional<Lead> result = service.findById(created.getId());
 
         // Then
         assertThat(result).isPresent();
-        assertThat(result.get().email()).isEqualTo("find@example.com");
+        assertThat(result.get().getEmail()).isEqualTo("find@example.com");
     }
 
     @Test
@@ -90,7 +90,7 @@ class LeadServiceTest {
 
         // Then
         assertThat(result).isPresent();
-        assertThat(result.get().company()).isEqualTo("Company");
+        assertThat(result.get().getCompany()).isEqualTo("Company");
     }
 
     @Test
@@ -123,7 +123,7 @@ class LeadServiceTest {
 
         // Then
         assertThat(result).hasSize(3);
-        assertThat(result).allMatch(lead -> lead.status().equals("NEW"));
+        assertThat(result).allMatch(lead -> lead.getStatus().equals("NEW"));
     }
 
     @Test
@@ -167,7 +167,7 @@ class LeadServiceTest {
 
         // Then
         assertThat(result).hasSize(5);
-        assertThat(result).allMatch(lead -> lead.status().equals("CONVERTED"));
+        assertThat(result).allMatch(lead -> lead.getStatus().equals("CONVERTED"));
     }
 
     @Test
@@ -191,6 +191,6 @@ class LeadServiceTest {
 
         // Then
         assertThat(result).hasSize(2);
-        assertThat(result).allMatch(lead -> lead.status().equals("QUALIFIED"));
+        assertThat(result).allMatch(lead -> lead.getStatus().equals("QUALIFIED"));
     }
 }

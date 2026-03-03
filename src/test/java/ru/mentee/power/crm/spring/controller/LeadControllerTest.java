@@ -45,7 +45,7 @@ class LeadControllerTest {
 
     @Test
     void leadsGetIdEditReturns200AndContainsLead() throws Exception {
-        String id = leadService.findAll().getFirst().id().toString();
+        String id = leadService.findAll().getFirst().getId().toString();
         mockMvc.perform(get("/leads/"+id+"/edit"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("lead"))
@@ -54,7 +54,7 @@ class LeadControllerTest {
 
     @Test
     void leadsPostUpdateRedirectsToLeadsAndSaveWithLead() throws Exception {
-        String id = leadService.findAll().getFirst().id().toString();
+        String id = leadService.findAll().getFirst().getId().toString();
 
         mockMvc.perform(post("/leads/"+id).param("id", id) // hidden field из формы
                         .param("email", "new@mail.com")
@@ -64,9 +64,9 @@ class LeadControllerTest {
                 .andExpect(redirectedUrl("/leads"));
 
         Lead lead = leadRepository.findById(UUID.fromString(id)).get();
-        assertThat(lead.email()).isEqualTo("new@mail.com");
-        assertThat(lead.company()).isEqualTo("New Company");
-        assertThat(lead.status()).isEqualTo("QUALIFIED");
+        assertThat(lead.getEmail()).isEqualTo("new@mail.com");
+        assertThat(lead.getCompany()).isEqualTo("New Company");
+        assertThat(lead.getStatus()).isEqualTo("QUALIFIED");
     }
 
     @Test

@@ -2,7 +2,6 @@ package ru.mentee.power.crm;
 
 import org.junit.jupiter.api.*;
 import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
 
 import java.net.http.*;
 import java.net.URI;
@@ -102,7 +101,7 @@ class StackComparisonTest {
 
     private long measureSpringBootStartup() {
         long startTime = System.nanoTime();
-        SpringApplication.run(ru.mentee.power.crm.spring.Application.class,
+        SpringApplication.run(Application.class,
                 new String[]{});
         long endTime = System.nanoTime();
         return (endTime - startTime) / 1_000_000 ;

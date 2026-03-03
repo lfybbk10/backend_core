@@ -11,6 +11,7 @@ import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,7 @@ public class LeadService {
      */
     public Lead addLead(String email, String company, String status) {
         // Бизнес-правило: проверка уникальности email
-        Optional<Lead> existing = repository.findByEmail(email);
+        Optional<Lead> existing = repository.findByEmailNative(email);
         if (existing.isPresent()) {
             throw new IllegalStateException("Lead with email already exists: " + email);
         }
@@ -46,7 +47,8 @@ public class LeadService {
                 UUID.randomUUID(),
                 email,
                 company,
-                status
+                status,
+                LocalDateTime.now()
         );
 
         // Сохраняем через repository
@@ -62,19 +64,19 @@ public class LeadService {
     }
 
     public Optional<Lead> findByEmail(String email) {
-        return repository.findByEmail(email);
+        return repository.findByEmailNative(email);
     }
 
     public List<Lead> findByStatus(String status) {
-        return repository.findAll().stream().filter(lead -> lead.status().equals(status)).collect(Collectors.toList());
+        return repository.findAll().stream().filter(lead -> lead.getStatus().equals(status)).collect(Collectors.toList());
     }
 
     public List<Lead> findLeads(String search, String status){
         List<Lead> leads = repository.findAll();
         Stream<Lead> searchStream = leads.stream().filter(lead ->
-                search == null || lead.email().toLowerCase().contains(search.toLowerCase()));
+                search == null || lead.getEmail().toLowerCase().contains(search.toLowerCase()));
         Stream<Lead> statusStream = searchStream.filter(lead ->
-                status == null || status.isEmpty() || lead.status().equalsIgnoreCase(status));
+                status == null || status.isEmpty() || lead.getStatus().equalsIgnoreCase(status));
 
         return statusStream.toList();
     }
@@ -92,7 +94,7 @@ public class LeadService {
     public void delete(UUID id) {
         Optional<Lead> existing = repository.findById(id);
         if (existing.isPresent()) {
-            repository.delete(id);
+            repository.deleteById(id);
         }
         else{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lead with id " + id + " not found");
