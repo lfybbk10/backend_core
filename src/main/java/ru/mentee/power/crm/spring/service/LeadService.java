@@ -3,16 +3,18 @@ package ru.mentee.power.crm.spring.service;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -37,7 +39,7 @@ public class LeadService {
      */
     public Lead addLead(String email, String company, String status) {
         // Бизнес-правило: проверка уникальности email
-        Optional<Lead> existing = repository.findByEmailNative(email);
+        Optional<Lead> existing = repository.findByEmail(email);
         if (existing.isPresent()) {
             throw new IllegalStateException("Lead with email already exists: " + email);
         }
@@ -64,12 +66,50 @@ public class LeadService {
     }
 
     public Optional<Lead> findByEmail(String email) {
-        return repository.findByEmailNative(email);
+        return repository.findByEmail(email);
     }
 
     public List<Lead> findByStatus(String status) {
         return repository.findAll().stream().filter(lead -> lead.getStatus().equals(status)).collect(Collectors.toList());
     }
+
+    public List<Lead> findByStatuses(String... statuses) {
+        return repository.findByStatusIn(List.of(statuses));
+    }
+
+    /**
+     * Получить первую страницу лидов с сортировкой.
+     */
+    public Page<Lead> getFirstPage(int pageSize) {
+        PageRequest pageRequest = PageRequest.of(
+                0, // первая страница (нумерация с 0)
+                pageSize,
+                Sort.by("createdAt").descending()
+        );
+        return repository.findAll(pageRequest);
+    }
+
+     public Page<Lead> searchByCompany(String company, int page, int size) {
+       Pageable pageable = PageRequest.of(page, size);
+       return repository.findByCompany(company, pageable);
+     }
+
+    /**
+     * Массовое обновление статуса (используется @Modifying метод).
+     * ВАЖНО: @Transactional обязательна для @Modifying!
+     */
+    @Transactional
+    public int convertNewToContacted() {
+        int updated = repository.updateStatusBulk("NEW", "CONTACTED");
+        // Логируем для observability
+        System.out.printf("Converted %d leads from NEW to CONTACTED%n", updated);
+        return updated;
+    }
+
+     @Transactional
+     public int archiveOldLeads(String status) {
+       return repository.deleteByStatusBulk(status);
+     }
 
     public List<Lead> findLeads(String search, String status){
         List<Lead> leads = repository.findAll();
