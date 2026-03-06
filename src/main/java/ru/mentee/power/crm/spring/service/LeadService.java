@@ -21,11 +21,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.springframework.transaction.annotation.Propagation.REQUIRES_NEW;
+
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class LeadService {
     private final LeadRepository repository;
+    private final LeadProcessor processor;
 
     @PostConstruct
     void init() {
@@ -138,6 +141,13 @@ public class LeadService {
         }
         else{
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lead with id " + id + " not found");
+        }
+    }
+
+    @Transactional
+    public void processLeads(List<Lead> leads) {
+        for (Lead lead : leads) {
+            processor.processSingleLead(lead.getId());
         }
     }
 }
