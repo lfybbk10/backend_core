@@ -33,7 +33,7 @@ class LeadServiceMockTest {
     @Test
     void shouldCallRepositorySave_whenAddingNewLead() {
         // Given: Repository возвращает пустой Optional (email уникален)
-        when(mockRepository.findByEmailNative(anyString()))
+        when(mockRepository.findByEmail(anyString()))
                 .thenReturn(Optional.empty());
 
         // When: настраиваем save чтобы возвращал переданный Lead
@@ -60,7 +60,7 @@ class LeadServiceMockTest {
                 "CONVERTED",
                 LocalDateTime.now()
         );
-        when(mockRepository.findByEmailNative("existing@example.com"))
+        when(mockRepository.findByEmail("existing@example.com"))
                 .thenReturn(Optional.of(existingLead));
 
         // When/Then: ожидаем исключение
@@ -75,7 +75,7 @@ class LeadServiceMockTest {
     @Test
     void shouldCallFindByEmail_beforeSave() {
         // Given
-        when(mockRepository.findByEmailNative(anyString()))
+        when(mockRepository.findByEmail(anyString()))
                 .thenReturn(Optional.empty());
         when(mockRepository.save(any(Lead.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
@@ -85,7 +85,7 @@ class LeadServiceMockTest {
 
         // Then: проверяем порядок вызовов
         var inOrder = inOrder(mockRepository);
-        inOrder.verify(mockRepository).findByEmailNative("test@example.com");
+        inOrder.verify(mockRepository).findByEmail("test@example.com");
         inOrder.verify(mockRepository).save(any(Lead.class));
     }
 }
