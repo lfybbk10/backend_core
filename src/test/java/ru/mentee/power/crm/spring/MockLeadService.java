@@ -8,7 +8,7 @@ public class MockLeadService extends LeadService {
     private final List<Lead> mockLeads;
 
     public MockLeadService() {
-        super(null); // repository не используется в mock
+        super(null, null); // repository не используется в mock
         this.mockLeads = List.of(
                 new Lead(UUID.randomUUID(), "test1@example.com", "+1234567890", "NEW"),
                 new Lead(UUID.randomUUID(), "test2@example.com", "+0987654321", "NEW")

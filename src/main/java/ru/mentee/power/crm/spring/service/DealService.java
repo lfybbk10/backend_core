@@ -2,6 +2,7 @@ package ru.mentee.power.crm.spring.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.mentee.power.crm.domain.Deal;
 import ru.mentee.power.crm.domain.DealStatus;
 import ru.mentee.power.crm.domain.Lead;
@@ -19,11 +20,18 @@ import java.util.stream.Collectors;
 public class DealService {
     private final DealRepository dealRepository;
     private final LeadRepository leadRepository;
+    private final LeadService leadService;
 
+    @Transactional
     public Deal convertLeadToDeal(UUID leadId, BigDecimal amount) {
         if(leadRepository.findById(leadId).isPresent()) {
             Deal deal = new Deal(leadId, amount);
             dealRepository.save(deal);
+
+            Lead lead = leadRepository.findById(leadId).orElseThrow();
+            lead.setStatus("CONVERTED");
+            leadRepository.save(lead);
+
             return deal;
         }
         else{
