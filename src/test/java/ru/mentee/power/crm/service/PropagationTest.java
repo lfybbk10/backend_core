@@ -3,6 +3,7 @@ package ru.mentee.power.crm.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 import ru.mentee.power.crm.testservices.FirstPropagationService;
@@ -23,7 +24,7 @@ public class PropagationTest {
 
     @Test
     void propagation_REQUIRED_shouldReuseTransaction() {
-        Lead lead = new Lead(null, "john@mail.com", "Comp", "NEW");
+        Lead lead = new Lead(null, "john@mail.com", new Company("Comp"), "NEW");
         lead = leadRepository.save(lead);
 
         Lead finalLead = lead;
@@ -39,10 +40,10 @@ public class PropagationTest {
 
     @Test
     void propagation_REQUIRES_NEW_shouldCreateNewTransaction() {
-        Lead lead1 = new Lead(null, "john@mail.com", "Comp", "NEW");
+        Lead lead1 = new Lead(null, "john@mail.com", new Company("Comp"), "NEW");
         UUID lead1Id = leadRepository.save(lead1).getId();
 
-        Lead lead2 = new Lead(null, "jack@mail.com", "Comp", "NEW");
+        Lead lead2 = new Lead(null, "jack@mail.com", new Company("Comp"), "NEW");
         UUID lead2Id = leadRepository.save(lead2).getId();
 
         firstPropagationService.requiresNewTransaction(lead1Id, lead2Id);

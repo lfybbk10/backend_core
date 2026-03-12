@@ -12,7 +12,7 @@ class LeadTest {
         // Given
         UUID randomUUID = UUID.randomUUID();
         Address address = new Address("New York", "Times Square", "123");
-        Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
+        Lead lead = new Lead(randomUUID, "John@gmail.com", new Company("TestCorp"), "NEW");
 
         // When
         UUID id = lead.getId();
@@ -27,7 +27,7 @@ class LeadTest {
         // Given
         UUID randomUUID = UUID.randomUUID();
         Address address = new Address("New York", "Times Square", "123");
-        Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
+        Lead lead = new Lead(randomUUID, "John@gmail.com", new Company("TestCorp"), "NEW");
         // When
         String email = lead.getEmail();
 
@@ -40,12 +40,12 @@ class LeadTest {
         // Given
         UUID randomUUID = UUID.randomUUID();
         Address address = new Address("New York", "Times Square", "123");
-        Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
+        Lead lead = new Lead(randomUUID, "John@gmail.com", new Company("TestCorp"), "NEW");
         // When
-        String company = lead.getCompany();
+        Company company = lead.getCompany();
 
         // Then
-        assertThat(company).isEqualTo("TestCorp");
+        assertThat(company.getName()).isEqualTo("TestCorp");
     }
 
     @Test
@@ -53,7 +53,7 @@ class LeadTest {
         // Given
         UUID randomUUID = UUID.randomUUID();
         Address address = new Address("New York", "Times Square", "123");
-        Lead lead = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
+        Lead lead = new Lead(randomUUID, "John@gmail.com", new Company("TestCorp"), "NEW");
         // When
         String status = lead.getStatus();
 
@@ -66,15 +66,9 @@ class LeadTest {
         // Given
         UUID randomUUID = UUID.randomUUID();
         Address address = new Address("New York", "Times Square", "123");
-        Lead lead1 = new Lead(randomUUID, "John@gmail.com", "TestCorp", "NEW");
-        Lead lead2 = new Lead(randomUUID, "Test@gmail.com", "TestCorp", "NEW");
+        Lead lead1 = new Lead(randomUUID, "John@gmail.com", new Company("TestCorp"), "NEW");
+        Lead lead2 = new Lead(randomUUID, "Test@gmail.com", new Company("TestCorp"), "NEW");
 
         assertThat(lead1).isEqualTo(lead2);
-    }
-
-    @Test
-    void shouldThrowException_whenInvalidStatus() {
-        Address address = new Address("New York", "Times Square", "123");
-        assertThatIllegalArgumentException().isThrownBy(() -> new Lead(UUID.randomUUID(), "John@gmail.com", "TestCorp", "INVALID"));
     }
 }

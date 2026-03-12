@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.InMemoryLeadRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
@@ -33,7 +34,7 @@ class LeadServiceTest {
         for (int i = 1; i <= 3; i++) {
             Lead lead = new Lead();
             lead.setEmail("lead" + i + "@example.com");
-            lead.setCompany("Company " + i);
+            lead.setCompany(new Company("Company " + i));
             lead.setStatus("NEW");
             lead.setCreatedAt(LocalDateTime.now());
             repository.save(lead);

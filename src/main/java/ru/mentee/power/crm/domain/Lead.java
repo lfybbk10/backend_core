@@ -25,9 +25,9 @@ public class Lead {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @NotBlank(message = "Компания обязательна")
-    @Column(nullable = false)
-    private String company;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    private Company company;
 
     @NotBlank(message = "Статус обязателен")
     @Column(nullable = false)
@@ -41,10 +41,16 @@ public class Lead {
     @Setter(AccessLevel.NONE) // JPA управляет версией сам — НЕ создаём setter
     private Long version;
 
-    public Lead(UUID id, String email, String company, String status) {
+    public Lead(UUID id, String email, Company company, String status) {
         this.id = id;
         this.email = email;
         this.company = company;
+        this.status = status;
+        this.createdAt = LocalDateTime.now();
+    }
+
+    public Lead(String email, String status) {
+        this.email = email;
         this.status = status;
         this.createdAt = LocalDateTime.now();
     }

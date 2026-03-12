@@ -3,6 +3,7 @@ package ru.mentee.power.crm.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.DealRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
@@ -25,7 +26,7 @@ public class DealServiceIntegrationTest {
 
     @Test
     void convertLeadToDeal_shouldRollbackOnConstraintViolation(){
-        Lead lead = new Lead(null, "asdasd@mail.ru", "comp", "NEW");
+        Lead lead = new Lead(null, "asdasd@mail.ru", new Company("comp"), "NEW");
         leadRepository.save(lead);
 
         assertThrows(NullPointerException.class, () -> {dealService.convertLeadToDeal(lead.getId(), null);});

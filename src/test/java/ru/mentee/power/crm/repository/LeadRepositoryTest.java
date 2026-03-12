@@ -8,6 +8,7 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
@@ -32,14 +33,14 @@ class LeadRepositoryTest {
         // Подготовка тестовых данных
         lead1 = new Lead();
         lead1.setEmail("john@example.com");
-        lead1.setCompany("ACME Corp");
+        lead1.setCompany(new Company("ACME Corp"));
         lead1.setStatus("NEW");
         lead1.setCreatedAt(LocalDateTime.now().minusDays(5));
         repository.save(lead1);
 
         lead2 = new Lead();
         lead2.setEmail("jane@example.com");
-        lead2.setCompany("Tech Inc");
+        lead2.setCompany(new Company("Tech Inc"));
         lead2.setStatus("CONTACTED");
         lead2.setCreatedAt(LocalDateTime.now().minusDays(2));
         repository.save(lead2);

@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
@@ -40,7 +41,7 @@ public class LeadService {
      *
      * @throws IllegalStateException если лид с таким email уже существует
      */
-    public Lead addLead(String email, String company, String status) {
+    public Lead addLead(String email, Company company, String status) {
         // Бизнес-правило: проверка уникальности email
         Optional<Lead> existing = repository.findByEmail(email);
         if (existing.isPresent()) {
