@@ -82,6 +82,8 @@ dependencies {
 
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
 
+    implementation 'org.liquibase:liquibase-core'
+
 }
 jte {
     sourceDirectory = file("src/main/jte").toPath()

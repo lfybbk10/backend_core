@@ -57,8 +57,7 @@ class LeadServiceMockTest {
                 UUID.randomUUID(),
                 "existing@example.com",
                 "Existing Company",
-                "CONVERTED",
-                LocalDateTime.now()
+                "CONVERTED"
         );
         when(mockRepository.findByEmail("existing@example.com"))
                 .thenReturn(Optional.of(existingLead));

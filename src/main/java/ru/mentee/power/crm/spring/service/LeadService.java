@@ -52,8 +52,7 @@ public class LeadService {
                 UUID.randomUUID(),
                 email,
                 company,
-                status,
-                LocalDateTime.now()
+                status
         );
 
         // Сохраняем через repository
