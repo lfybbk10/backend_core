@@ -36,6 +36,11 @@ public class Lead {
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Version
+    @Column(name = "version", nullable = false)
+    @Setter(AccessLevel.NONE) // JPA управляет версией сам — НЕ создаём setter
+    private Long version;
+
     public Lead(UUID id, String email, String company, String status) {
         this.id = id;
         this.email = email;
