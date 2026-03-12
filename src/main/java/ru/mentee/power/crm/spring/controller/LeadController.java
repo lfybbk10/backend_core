@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.service.LeadService;
 
@@ -38,7 +39,7 @@ public class LeadController {
 
     @GetMapping("/leads/new")
     public String showCreateForm(Model model) {
-        model.addAttribute("lead", new Lead(null, "", "", "NEW"));
+        model.addAttribute("lead", new Lead(null, "", new Company(), "NEW"));
         return "leads/create"; // JTE шаблон leads/create.jte
     }
 

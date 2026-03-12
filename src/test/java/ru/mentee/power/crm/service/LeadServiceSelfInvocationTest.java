@@ -3,6 +3,7 @@ package ru.mentee.power.crm.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 import ru.mentee.power.crm.spring.service.LeadService;
@@ -24,9 +25,9 @@ public class LeadServiceSelfInvocationTest {
 
     @Test
     void demonstrateSelfInvocationProblem(){
-        Lead lead1 = new Lead(null, "qwe@mail.ru", "comp", "NEW");
-        Lead lead2 = new Lead(null, "qweQ@mail.ru", "comp2", "NEW");
-        Lead lead3 = new Lead(UUID.randomUUID(), "qweQq@mail.ru", "comp2", "NEW");
+        Lead lead1 = new Lead(null, "qwe@mail.ru", new Company("comp"), "NEW");
+        Lead lead2 = new Lead(null, "qweQ@mail.ru", new Company("comp2"), "NEW");
+        Lead lead3 = new Lead(UUID.randomUUID(), "qweQq@mail.ru", new Company("comp2"), "NEW");
 
         leadRepository.save(lead1);
         leadRepository.save(lead2);

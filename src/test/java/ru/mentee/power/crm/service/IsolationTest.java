@@ -3,6 +3,7 @@ package ru.mentee.power.crm.service;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 import ru.mentee.power.crm.testservices.IsolationTestService;
@@ -24,7 +25,7 @@ public class IsolationTest {
 
     @Test
     void isolation_REPEATABLE_READ_preventsNonRepeatableRead() throws Exception {
-        Lead lead = new Lead(null, "john@mail.com", "Comp", "NEW");
+        Lead lead = new Lead(null, "john@mail.com", new Company("Comp"), "NEW");
         UUID leadId = leadRepository.save(lead).getId();
 
         CountDownLatch firstReadDone = new CountDownLatch(1);
@@ -63,7 +64,7 @@ public class IsolationTest {
 
     @Test
     void isolation_READ_COMMITTED_allowsNonRepeatableRead() throws Exception {
-        Lead lead = new Lead(null, "john@mail.com", "Comp", "NEW");
+        Lead lead = new Lead(null, "john@mail.com", new Company("Comp"), "NEW");
         UUID leadId = leadRepository.save(lead).getId();
 
         CountDownLatch firstReadDone = new CountDownLatch(1);

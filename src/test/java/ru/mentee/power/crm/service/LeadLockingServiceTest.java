@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.ObjectOptimisticLockingFailureException;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 import ru.mentee.power.crm.spring.service.LeadLockingService;
@@ -25,7 +26,7 @@ class LeadLockingServiceTest {
     @Test
     void shouldPreventLostUpdate_whenPessimisticLockUsed() throws Exception {
         // Given: Lead с начальным статусом
-        Lead lead = new Lead(null, "concurrent@test.com", "comp","NEW");
+        Lead lead = new Lead(null, "concurrent@test.com", new Company("comp"),"NEW");
         lead = leadRepository.save(lead);
         UUID leadId = lead.getId();
 
@@ -70,7 +71,7 @@ class LeadLockingServiceTest {
     @Test
     void shouldThrowOptimisticLockException_whenConcurrentUpdateWithoutLock() throws Exception {
         // Given: Lead с optimistic locking через @Version
-        Lead lead = new Lead(null, "optimistic@test.com", "comp","NEW");
+        Lead lead = new Lead(null, "optimistic@test.com", new Company("comp"),"NEW");
         lead = leadRepository.save(lead);
         UUID leadId = lead.getId();
 
@@ -113,8 +114,8 @@ class LeadLockingServiceTest {
     @Test
     void shouldThrowCannotAcquireLockException_whenDeadlockOccurs() throws Exception {
         // Given
-        Lead lead1 = new Lead(null, "deadlock1@test.com", "comp1", "NEW");
-        Lead lead2 = new Lead(null, "deadlock2@test.com", "comp2", "NEW");
+        Lead lead1 = new Lead(null, "deadlock1@test.com", new Company("comp1"), "NEW");
+        Lead lead2 = new Lead(null, "deadlock2@test.com", new Company("comp2"), "NEW");
 
         lead1 = leadRepository.save(lead1);
         lead2 = leadRepository.save(lead2);

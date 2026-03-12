@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 import ru.mentee.power.crm.spring.service.LeadService;
@@ -41,7 +42,7 @@ class LeadServiceMockTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         // When: вызываем бизнес-метод
-        Lead result = service.addLead("new@example.com", "Company", "NEW");
+        Lead result = service.addLead("new@example.com", new Company("Company"), "NEW");
 
         // Then: проверяем что Repository.save() был вызван ровно 1 раз
         verify(mockRepository, times(1)).save(any(Lead.class));
@@ -56,7 +57,7 @@ class LeadServiceMockTest {
         Lead existingLead = new Lead(
                 UUID.randomUUID(),
                 "existing@example.com",
-                "Existing Company",
+                new Company("Existing Company"),
                 "CONVERTED"
         );
         when(mockRepository.findByEmail("existing@example.com"))
@@ -64,7 +65,7 @@ class LeadServiceMockTest {
 
         // When/Then: ожидаем исключение
         assertThatThrownBy(() ->
-                service.addLead("existing@example.com", "New Company", "NEW")
+                service.addLead("existing@example.com", new Company("New Company"), "NEW")
         ).isInstanceOf(IllegalStateException.class);
 
         // Then: save() НЕ должен быть вызван
@@ -80,7 +81,7 @@ class LeadServiceMockTest {
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
         // When
-        service.addLead("test@example.com", "Company", "NEW");
+        service.addLead("test@example.com", new Company("Company"), "NEW");
 
         // Then: проверяем порядок вызовов
         var inOrder = inOrder(mockRepository);

@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.service.LeadService;
 
@@ -47,8 +48,8 @@ class LeadListServletTest {
     @Test
     @Disabled
     void shouldReturnHtmlTable_whenDoGetCalled() throws ServletException, IOException {
-        Lead lead1 = new Lead(UUID.randomUUID(), "test1@mail.com", "Comp", "NEW");
-        Lead lead2 = new Lead(UUID.randomUUID(), "test2@mail.com", "Comp1", "NEW");
+        Lead lead1 = new Lead(UUID.randomUUID(), "test1@mail.com", new Company("Comp"), "NEW");
+        Lead lead2 = new Lead(UUID.randomUUID(), "test2@mail.com", new Company("Comp1"), "NEW");
 
         when(leadService.findAll()).thenReturn(Arrays.asList(lead1, lead2));
 

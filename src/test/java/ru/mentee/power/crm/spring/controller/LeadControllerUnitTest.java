@@ -8,6 +8,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.server.ResponseStatusException;
+import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.MockLeadService;
 import org.junit.jupiter.api.Test;
@@ -94,7 +95,7 @@ class LeadControllerUnitTest {
     void shouldReturnLeadsWithTest1WithQuery() throws Exception {
         String search = "test1";
         when(leadService.findLeads(search, "")).
-                thenReturn(Arrays.asList(new Lead(UUID.randomUUID(), "test1@mail.ru", "c", "NEW")));
+                thenReturn(Arrays.asList(new Lead(UUID.randomUUID(), "test1@mail.ru", new Company("c"), "NEW")));
 
         mockMvc.perform(get("/leads?search=test1"))
                 .andExpect(model().attribute("leads", everyItem(
@@ -104,8 +105,8 @@ class LeadControllerUnitTest {
     @Test
     void ShouldReturnAllLeads() throws Exception {
 
-        Lead testLead1 = new Lead(UUID.randomUUID(), "test1", "c", "NEW");
-        Lead testLead2 = new Lead(UUID.randomUUID(), "test2", "c", "NEW");
+        Lead testLead1 = new Lead(UUID.randomUUID(), "test1", new Company("c"), "NEW");
+        Lead testLead2 = new Lead(UUID.randomUUID(), "test2", new Company("c"), "NEW");
         when(leadService.findLeads(null, null))
             .thenReturn(Arrays.asList(testLead1, testLead2));
 
@@ -119,7 +120,7 @@ class LeadControllerUnitTest {
         String status = "NEW";
 
         when(leadService.findLeads(search, status))
-                .thenReturn(List.of(new Lead(UUID.randomUUID(), "test1@mail.ru", "c", "NEW")));
+                .thenReturn(List.of(new Lead(UUID.randomUUID(), "test1@mail.ru", new Company("c"), "NEW")));
 
         MvcResult res = mockMvc.perform(get("/leads")
                         .param("search", search)
