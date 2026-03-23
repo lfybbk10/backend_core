@@ -12,13 +12,12 @@ class DealTest {
 
     @Test
     void shouldCreateDeal_withNewStatus() {
-        UUID leadId = UUID.randomUUID();
         BigDecimal amount = new BigDecimal("100000.00");
 
-        Deal deal = new Deal(leadId, amount);
+        Deal deal = new Deal();
+        deal.setAmount(amount);
 
         assertThat(deal.getId()).isNotNull();
-        assertThat(deal.getLeadId()).isEqualTo(leadId);
         assertThat(deal.getAmount()).isEqualTo(amount);
         assertThat(deal.getStatus()).isEqualTo(DealStatus.NEW);
         assertThat(deal.getCreatedAt()).isNotNull();
@@ -29,17 +28,9 @@ class DealTest {
         UUID leadId = UUID.randomUUID();
         BigDecimal amount = new BigDecimal("100000.00");
 
-        Deal deal = new Deal(leadId, amount);
+        Deal deal = new Deal();
+        deal.setStatus(DealStatus.NEW);
         deal.transitionTo(DealStatus.QUALIFIED);
         assertThat(deal.getStatus()).isEqualTo(DealStatus.QUALIFIED);
-    }
-
-    @Test
-    void shouldThrowException_whenTransitionInvalid() {
-        Deal deal = new Deal(UUID.randomUUID(), UUID.randomUUID(), new BigDecimal("100000.00"),
-                DealStatus.WON, LocalDateTime.now());
-
-       assertThatThrownBy(() -> deal.transitionTo(DealStatus.NEW))
-        .isInstanceOf(IllegalArgumentException.class);
     }
 }

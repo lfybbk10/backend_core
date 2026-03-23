@@ -5,7 +5,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -34,25 +37,28 @@ public class Lead {
     private String status;
 
     @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Version
     @Column(name = "version", nullable = false)
     @Setter(AccessLevel.NONE) // JPA управляет версией сам — НЕ создаём setter
     private Long version;
 
+    @OneToMany(mappedBy = "lead", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    public List<Deal> deals = new ArrayList<>();
+
     public Lead(UUID id, String email, Company company, String status) {
         this.id = id;
         this.email = email;
         this.company = company;
         this.status = status;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = Instant.now();
     }
 
     public Lead(String email, String status) {
         this.email = email;
         this.status = status;
-        this.createdAt = LocalDateTime.now();
+        this.createdAt = Instant.now();
     }
 
     // equals/hashCode ТОЛЬКО по id (как у тебя в record)

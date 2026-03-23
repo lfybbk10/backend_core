@@ -1,33 +1,51 @@
 package ru.mentee.power.crm.domain;
 
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import ru.mentee.power.crm.entity.DealProduct;
+
 import java.math.BigDecimal;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "deals")
 public class Deal {
-    private final UUID id;
-    private final UUID leadId;
-    private final BigDecimal amount;
-    private DealStatus status;
-    private final LocalDateTime createdAt;
 
-    public Deal(UUID leadId, BigDecimal amount) {
-        this.id = UUID.randomUUID();
-        this.leadId = Objects.requireNonNull(leadId, "leadId must not be null");
-        this.amount = Objects.requireNonNull(amount, "amount must not be null");
-        this.status = DealStatus.NEW;
-        this.createdAt = LocalDateTime.now();
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
-    // Конструктор для восстановления из БД (Sprint 7)
-    public Deal(UUID id, UUID leadId, BigDecimal amount, DealStatus status, LocalDateTime createdAt) {
-        this.id = id;
-        this.leadId = leadId;
-        this.amount = amount;
-        this.status = status;
-        this.createdAt = createdAt;
-    }
+    @ManyToOne
+    @JoinColumn(name = "lead_id")
+    private Lead lead;
+
+    @Column(name = "amount")
+    private BigDecimal amount;
+
+    @Column(name = "stage")
+    @Enumerated(EnumType.STRING)
+    private DealStatus status = DealStatus.NEW;
+
+    @Column(name = "title")
+    private String title = "";
+
+    @Column(name = "created_at")
+    private Instant createdAt = Instant.now();
+
+    @OneToMany(mappedBy = "deal", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DealProduct> dealProducts = new ArrayList<>();
 
     public void transitionTo(DealStatus newStatus) {
         if(status.canTransitionTo(newStatus)) {
@@ -38,12 +56,15 @@ public class Deal {
         }
     }
 
-    // Getters (БЕЗ setter для status!)
-    public UUID getId() { return id; }
-    public UUID getLeadId() { return leadId; }
-    public BigDecimal getAmount() { return amount; }
-    public DealStatus getStatus() { return status; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void addDealProduct(DealProduct dealProduct) {
+        dealProducts.add(dealProduct);
+        dealProduct.setDeal(this);
+    }
+
+    public void removeDealProduct(DealProduct dealProduct) {
+        dealProducts.remove(dealProduct);
+        dealProduct.setDeal(null);
+    }
 
     @Override
     public boolean equals(Object o) {
