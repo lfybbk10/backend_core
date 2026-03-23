@@ -5,8 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import ru.mentee.power.crm.entity.DealProduct;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -32,6 +35,6 @@ public class Product {
     @Column(nullable = false)
     private Boolean active = true;
 
-    // Примечание: @Data создаст getters/setters/toString автоматически
-    // @EqualsAndHashCode(of = "sku") использует SKU для сравнения объектов
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<DealProduct> dealProducts = new ArrayList<>();
 }

@@ -12,7 +12,10 @@ import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,14 +38,14 @@ class LeadRepositoryTest {
         lead1.setEmail("john@example.com");
         lead1.setCompany(new Company("ACME Corp"));
         lead1.setStatus("NEW");
-        lead1.setCreatedAt(LocalDateTime.now().minusDays(5));
+        lead1.setCreatedAt(Instant.now().minus(5, ChronoUnit.DAYS));
         repository.save(lead1);
 
         lead2 = new Lead();
         lead2.setEmail("jane@example.com");
         lead2.setCompany(new Company("Tech Inc"));
         lead2.setStatus("CONTACTED");
-        lead2.setCreatedAt(LocalDateTime.now().minusDays(2));
+        lead2.setCreatedAt(Instant.now().minus(2, ChronoUnit.DAYS));
         repository.save(lead2);
     }
 

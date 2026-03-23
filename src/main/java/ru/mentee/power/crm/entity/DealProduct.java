@@ -1,0 +1,39 @@
+package ru.mentee.power.crm.entity;
+
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import ru.mentee.power.crm.domain.Deal;
+import ru.mentee.power.crm.domain.Product;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+@Entity
+@Table(name = "deal_product")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@EqualsAndHashCode(of = "id")
+public class DealProduct {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "deal_id")
+    private Deal deal;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    @Column(nullable = false)
+    private Integer quantity;
+
+    @Column(name = "unit_price", precision = 15, scale = 2, nullable = false)
+    private BigDecimal unitPrice;
+}

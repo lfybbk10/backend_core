@@ -11,6 +11,7 @@ import ru.mentee.power.crm.spring.repository.InMemoryLeadRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 import ru.mentee.power.crm.spring.service.LeadService;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -36,7 +37,7 @@ class LeadServiceTest {
             lead.setEmail("lead" + i + "@example.com");
             lead.setCompany(new Company("Company " + i));
             lead.setStatus("NEW");
-            lead.setCreatedAt(LocalDateTime.now());
+            lead.setCreatedAt(Instant.now());
             repository.save(lead);
         }
     }
