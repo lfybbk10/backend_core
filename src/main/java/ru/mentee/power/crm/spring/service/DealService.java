@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.mentee.power.crm.domain.Deal;
 import ru.mentee.power.crm.domain.DealStatus;
 import ru.mentee.power.crm.domain.Lead;
+import ru.mentee.power.crm.spring.repository.DealJpaRepository;
 import ru.mentee.power.crm.spring.repository.DealRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
@@ -18,7 +19,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class DealService {
-    private final DealRepository dealRepository;
+    private final DealJpaRepository dealRepository;
     private final LeadRepository leadRepository;
     private final LeadService leadService;
 

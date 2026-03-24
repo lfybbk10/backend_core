@@ -50,7 +50,6 @@ public class LeadService {
 
         // Создаём нового лида
         Lead lead = new Lead(
-                UUID.randomUUID(),
                 email,
                 company,
                 status
@@ -125,13 +124,14 @@ public class LeadService {
     }
 
     public Lead update(UUID id, Lead updatedLead){
-        Optional<Lead> existing = repository.findById(id);
-        if (existing.isPresent()) {
-            return repository.save(updatedLead);
-        }
-        else{
-            throw new IllegalStateException("Lead with id " + id + " not found");
-        }
+        Lead existing = repository.findById(id)
+                .orElseThrow(() -> new IllegalStateException("Lead with id " + id + " not found"));
+
+        existing.setEmail(updatedLead.getEmail());
+        existing.setStatus(updatedLead.getStatus());
+        existing.setCompany(updatedLead.getCompany());
+
+        return repository.save(existing);
     }
 
     public void delete(UUID id) {

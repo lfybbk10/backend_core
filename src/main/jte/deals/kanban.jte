@@ -20,7 +20,7 @@
         @for(Deal deal : dealsByStatus.getOrDefault(status, java.util.List.of()))
           <div class="bg-gray-50 p-3 mb-2 rounded border">
             <p class="font-semibold">${deal.getAmount().toString()} ₽</p>
-            <p class="text-sm text-gray-600">Lead: ${deal.getLeadId().toString()}</p>
+            <p class="text-sm text-gray-600">Lead: ${deal.getLead().getId().toString()}</p>
 
             <!-- TODO: добавьте форму для перехода статуса -->
             <form method="post" action="/deals/${deal.getId().toString()}/transition" class="mt-2">

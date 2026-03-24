@@ -1,4 +1,5 @@
 @param ru.mentee.power.crm.domain.Lead lead
+@param java.util.List<ru.mentee.power.crm.domain.Company> companies
 @param org.springframework.validation.BindingResult errors
 
 
@@ -31,17 +32,15 @@
 
         <!-- Company -->
                 <div class="mb-4">
-                  <label for="company" class="block text-sm font-medium text-gray-700 mb-1">
-                    Company
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    required
-                    class="${errors != null && errors.hasFieldErrors("company") ? "border-red-500" : "border-gray-300"}"
-                    placeholder="company"
-                  />
+                  <label for="companyId">Company</label>
+                  <select id="companyId" name="companyId" required>
+                    <option value="">Выберите компанию</option>
+                    @for (ru.mentee.power.crm.domain.Company company : companies)
+                      <option value="${company.getId().toString()}">
+                        ${company.getName()}
+                      </option>
+                    @endfor
+                  </select>
                   @if(errors != null && errors.hasFieldErrors("company"))
                               <p class="text-red-600 text-sm mt-1">
                                 ${errors.getFieldError("company").getDefaultMessage()}

@@ -36,14 +36,12 @@ class LeadRepositoryTest {
         // Подготовка тестовых данных
         lead1 = new Lead();
         lead1.setEmail("john@example.com");
-        lead1.setCompany(new Company("ACME Corp"));
         lead1.setStatus("NEW");
         lead1.setCreatedAt(Instant.now().minus(5, ChronoUnit.DAYS));
         repository.save(lead1);
 
         lead2 = new Lead();
         lead2.setEmail("jane@example.com");
-        lead2.setCompany(new Company("Tech Inc"));
         lead2.setStatus("CONTACTED");
         lead2.setCreatedAt(Instant.now().minus(2, ChronoUnit.DAYS));
         repository.save(lead2);
@@ -129,5 +127,31 @@ class LeadRepositoryTest {
         int updated = repository.updateStatusBulk("NEW", "CONTACTED");
         assertThat(updated).isEqualTo(1);
         assertThat(repository.findByStatus("CONTACTED")).hasSize(2);
+    }
+
+    @Test
+    void shouldFindByEmailIgnoreCase_whenExists(){
+        Lead lead = new Lead();
+        lead.setEmail("Test@Example.com");
+        lead.setStatus("NEW");
+        lead.setCreatedAt(Instant.now());
+
+        System.out.println("before save company = " + (lead.getCompany()==null));
+        repository.save(lead);
+        System.out.println("after save company = " + (lead.getCompany()==null));
+
+        Optional<Lead> leadFromRepository = repository.findByEmailIgnoreCase("test@example.com");
+
+        assertThat(leadFromRepository).isPresent();
+        assertThat(leadFromRepository.get().getEmail()).isEqualTo("Test@Example.com");
+    }
+
+    @Test
+    void shouldReturnEmpty_whenEmailNotFound() {
+        // When
+        Optional<Lead> found = repository.findByEmailIgnoreCase("nonexistent@example.com");
+
+        // Then
+        assertThat(found).isEmpty();
     }
 }

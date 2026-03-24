@@ -40,6 +40,8 @@ public interface LeadRepository extends JpaRepository<Lead, UUID> {
 
     List<Lead> findByCompany(String company);
 
+    Optional<Lead> findByEmailIgnoreCase(String email);
+
     long countByStatus(String status);
 
     boolean existsByEmail(String email);
