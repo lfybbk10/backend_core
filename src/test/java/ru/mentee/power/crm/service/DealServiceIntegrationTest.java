@@ -10,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.repository.DealJpaRepository;
-import ru.mentee.power.crm.spring.repository.DealRepository;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 import ru.mentee.power.crm.spring.service.DealService;
 
