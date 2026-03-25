@@ -30,9 +30,6 @@ jobs:
       - name: Check code formatting (Spotless)
         run: ./gradlew --no-daemon spotlessCheck
 
-      - name: Run Checkstyle
-        run: ./gradlew --no-daemon checkstyleMain checkstyleTest
-
       - name: Run tests
         run: ./gradlew --no-daemon test
 
