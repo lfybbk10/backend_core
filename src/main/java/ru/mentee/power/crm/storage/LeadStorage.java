@@ -3,42 +3,41 @@ package ru.mentee.power.crm.storage;
 import ru.mentee.power.crm.domain.Lead;
 
 public class LeadStorage {
-    private Lead[] leads = new Lead[100];
+  private Lead[] leads = new Lead[100];
 
-    public boolean add(Lead lead) {
-        for (int i = 0; i < leads.length; i++) {
-            if (leads[i] != null) {
-                if(leads[i].equals(lead)){
-                    return false;
-                }
-            }
-            else {
-                leads[i] = lead;
-                return true;
-            }
+  public boolean add(Lead lead) {
+    for (int i = 0; i < leads.length; i++) {
+      if (leads[i] != null) {
+        if (leads[i].equals(lead)) {
+          return false;
         }
-
-        throw new IllegalStateException("Storage is full, cannot add more leads");
+      } else {
+        leads[i] = lead;
+        return true;
+      }
     }
 
-    public Lead[] findAll() {
-        Lead[] result = new Lead[size()];
-        for (int i = 0; i < leads.length; i++) {
-            if (leads[i] != null) {
-                result[i] = leads[i];
-            }
-        }
+    throw new IllegalStateException("Storage is full, cannot add more leads");
+  }
 
-        return result;
+  public Lead[] findAll() {
+    Lead[] result = new Lead[size()];
+    for (int i = 0; i < leads.length; i++) {
+      if (leads[i] != null) {
+        result[i] = leads[i];
+      }
     }
 
-    public int size() {
-        int count = 0;
-        for (int i = 0; i < leads.length; i++) {
-            if (leads[i] != null) {
-                count++;
-            }
-        }
-        return count;
+    return result;
+  }
+
+  public int size() {
+    int count = 0;
+    for (int i = 0; i < leads.length; i++) {
+      if (leads[i] != null) {
+        count++;
+      }
     }
+    return count;
+  }
 }

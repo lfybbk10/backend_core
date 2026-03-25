@@ -9,10 +9,11 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles("test")
 class H2ConsoleTest {
 
-    @Test
-    void keepAppRunning() throws Exception {
-        System.out.println("Приложение запущено. Открой http://localhost:8081/h2-console");
+  @Test
+  @Disabled
+  void keepAppRunning() throws Exception {
+    System.out.println("Приложение запущено. Открой http://localhost:8081/h2-console");
 
-        Thread.sleep(10 * 60 * 1000); // 10 минут
-    }
+    Thread.sleep(10 * 60 * 1000); // 10 минут
+  }
 }
