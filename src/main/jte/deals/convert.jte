@@ -18,21 +18,21 @@
     <div class="bg-white p-6 rounded-lg shadow mb-4">
       <h2 class="font-semibold mb-2">Лид</h2>
       <div class="text-sm text-gray-700 space-y-1">
-        <p><span class="text-gray-500">ID:</span> ${lead.id().toString()}</p>
-        @if(lead.email() != null)
-          <p><span class="text-gray-500">Email:</span> ${lead.email()}</p>
+        <p><span class="text-gray-500">ID:</span> ${lead.getId().toString()}</p>
+        @if(lead.getEmail() != null)
+          <p><span class="text-gray-500">Email:</span> ${lead.getEmail()}</p>
         @endif
-        @if(lead.company() != null)
-          <p><span class="text-gray-500">Компания:</span> ${lead.company()}</p>
+        @if(lead.getCompany() != null)
+          <p><span class="text-gray-500">Компания:</span> ${lead.getCompany().getName()}</p>
         @endif
-        @if(lead.status() != null)
-          <p><span class="text-gray-500">Статус:</span> ${lead.status()}</p>
+        @if(lead.getStatus() != null)
+          <p><span class="text-gray-500">Статус:</span> ${lead.getStatus()}</p>
         @endif
       </div>
     </div>
 
     <form method="post" action="/deals/convert" class="bg-white p-6 rounded-lg shadow">
-      <input type="hidden" name="leadId" value="${lead.id().toString()}">
+      <input type="hidden" name="leadId" value="${lead.getId().toString()}">
 
       <label class="block text-sm font-medium text-gray-700 mb-1" for="amount">
         Сумма сделки

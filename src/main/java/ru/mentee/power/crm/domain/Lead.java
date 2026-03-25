@@ -55,6 +55,13 @@ public class Lead {
         this.createdAt = Instant.now();
     }
 
+    public Lead(String email, Company company, String status) {
+        this.email = email;
+        this.company = company;
+        this.status = status;
+        this.createdAt = Instant.now();
+    }
+
     public Lead(String email, String status) {
         this.email = email;
         this.status = status;

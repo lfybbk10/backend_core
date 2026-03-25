@@ -10,15 +10,18 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
+import ru.mentee.power.crm.spring.repository.CompanyRepository;
 import ru.mentee.power.crm.spring.service.LeadService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
 @RequiredArgsConstructor
 public class LeadController {
     private final LeadService leadService;
+    private final CompanyRepository companyRepository;
 
     @GetMapping("/")
     @ResponseBody
@@ -40,15 +43,18 @@ public class LeadController {
     @GetMapping("/leads/new")
     public String showCreateForm(Model model) {
         model.addAttribute("lead", new Lead(null, "", new Company(), "NEW"));
+        model.addAttribute("companies", companyRepository.findAll());
         return "leads/create"; // JTE шаблон leads/create.jte
     }
 
     @PostMapping("/leads")
-    public String createLead(@Valid @ModelAttribute Lead lead, BindingResult bindingResult) {
+    public String createLead(@Valid @ModelAttribute Lead lead, @RequestParam UUID companyId, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "leads/create";
         }
-        leadService.addLead(lead.getEmail(), lead.getCompany(), lead.getStatus());
+        Company company = companyRepository.findById(companyId).get();
+        lead.setCompany(company);
+        leadService.addLead(lead.getEmail(), company, lead.getStatus());
         return "redirect:/leads";
     }
 
@@ -57,6 +63,7 @@ public class LeadController {
         Lead lead = leadService.findById(id).orElse(null);
         if(lead != null) {
             model.addAttribute("lead", lead);
+            model.addAttribute("companies", companyRepository.findAll());
             return "leads/edit";
         }
         else{
@@ -65,10 +72,12 @@ public class LeadController {
     }
 
     @PostMapping("/leads/{id}")
-    public String updateLead(@Valid @ModelAttribute Lead lead, BindingResult bindingResult, @PathVariable UUID id) {
+    public String updateLead(@Valid @ModelAttribute Lead lead, @RequestParam UUID companyId, BindingResult bindingResult, @PathVariable UUID id) {
         if(bindingResult.hasErrors()) {
             return "leads/edit";
         }
+        Optional<Company> company = companyRepository.findById(companyId);
+        company.ifPresent(lead::setCompany);
         leadService.update(id, lead);
         return "redirect:/leads";
     }
