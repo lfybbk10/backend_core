@@ -59,6 +59,10 @@ public class LeadService {
     return repository.findById(id);
   }
 
+  public Lead createLead(Lead lead) {
+    return repository.save(lead);
+  }
+
   public Optional<Lead> findByEmail(String email) {
     return repository.findByEmail(email);
   }

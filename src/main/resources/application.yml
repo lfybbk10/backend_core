@@ -23,7 +23,23 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yaml
     drop-first: false
 
+  jackson:
+    default-property-inclusion: non_null
+    datatype:
+      datetime:
+        write-dates-as-timestamps: false
+    serialization:
+      indent-output: true
+    deserialization:
+      fail-on-unknown-properties: false
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
     org.hibernate.orm.jdbc.bind: TRACE
+
+# Внешние API
+
+email:
+  validation:
+    base-url: ${EMAIL_VALIDATION_URL:http://localhost:8089}

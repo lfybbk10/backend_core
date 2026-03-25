@@ -88,6 +88,11 @@ dependencies {
 
     implementation 'org.springframework.boot:spring-boot-liquibase'
     implementation 'org.liquibase:liquibase-core'
+
+    // WireMock для интеграционных тестов внешних API
+    testImplementation 'org.wiremock:wiremock-standalone:3.4.2'
+
+    implementation 'org.springframework.boot:spring-boot-starter-restclient'
 }
 jte {
     sourceDirectory = file("src/main/jte").toPath()
