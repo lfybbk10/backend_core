@@ -1,5 +1,6 @@
 package ru.mentee.power.crm.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -45,6 +46,7 @@ public class Lead {
   @OneToMany(
       mappedBy = "lead",
       cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+  @JsonIgnore
   public List<Deal> deals = new ArrayList<>();
 
   public Lead(UUID id, String email, Company company, String status) {
