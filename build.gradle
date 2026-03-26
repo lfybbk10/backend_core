@@ -30,6 +30,8 @@ ext {
     tomcatVersion = '11.0.1'
     jteVersion = '3.1.15'
     springBootVersion = '3.2.0'
+    mapstructVersion = '1.6.3'
+    lombokMapstructBindingVersion = '0.2.0'
 }
 
 dependencies {
@@ -100,6 +102,13 @@ dependencies {
     // Resilience4j для retry, circuit breaker, rate limiter
     implementation 'io.github.resilience4j:resilience4j-spring-boot4:2.4.0'
     implementation 'io.github.resilience4j:resilience4j-feign:2.4.0'
+
+    // lombok-mapstruct-binding (критически важно!)
+    implementation "org.projectlombok:lombok-mapstruct-binding:${lombokMapstructBindingVersion}"
+
+    // MapStruct (должен быть после Lombok в annotationProcessor)
+    implementation "org.mapstruct:mapstruct:${mapstructVersion}"
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
 }
 jte {
     sourceDirectory = file("src/main/jte").toPath()
@@ -120,6 +129,13 @@ spotless {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += [
+            '-Amapstruct.defaultComponentModel=spring',
+            '-Amapstruct.unmappedTargetPolicy=ERROR'
+    ]
 }
 
 tasks.named("bootRun") {
