@@ -1,6 +1,8 @@
 package ru.mentee.power.crm.spring.service;
 
+import io.github.resilience4j.retry.annotation.Retry;
 import jakarta.annotation.PostConstruct;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,12 +14,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
+import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
+import ru.mentee.power.crm.spring.client.EmailValidationResponse;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
 @Slf4j
@@ -26,6 +28,7 @@ import ru.mentee.power.crm.spring.repository.LeadRepository;
 public class LeadService {
   private final LeadRepository repository;
   private final LeadProcessor processor;
+  private final EmailValidationFeignClient emailValidationClient;
 
   @PostConstruct
   void init() {
@@ -59,7 +62,33 @@ public class LeadService {
     return repository.findById(id);
   }
 
+  @Retry(name = "email-validation", fallbackMethod = "createLeadFallback")
   public Lead createLead(Lead lead) {
+    log.info("createLead called");
+    EmailValidationResponse validation = emailValidationClient.validateEmail(lead.getEmail());
+
+    if (!validation.valid()) {
+      throw new IllegalArgumentException("Invalid email: " + validation.reason());
+    }
+
+    lead.setCreatedAt(Instant.now());
+    return repository.save(lead);
+  }
+
+  // Fallback метод — вызывается после исчерпания retry попыток
+  public Lead createLeadFallback(Lead lead, Exception ex) {
+    log.warn("Fallback called. Exception class = {}", ex.getClass().getName(), ex);
+
+    log.warn(
+        "Email validation service unavailable after retries. "
+            + "Creating lead without validation. Error: {}",
+        ex.getMessage());
+
+    // Graceful degradation: создаём лида без валидации
+    // В production можно: 1) пометить для последующей проверки
+    //                     2) отправить в очередь на валидацию
+    //                     3) отклонить запрос (throw new ServiceUnavailableException)
+    lead.setCreatedAt(Instant.now());
     return repository.save(lead);
   }
 
@@ -124,25 +153,26 @@ public class LeadService {
     return statusStream.toList();
   }
 
-  public Lead update(UUID id, Lead updatedLead) {
-    Lead existing =
-        repository
-            .findById(id)
-            .orElseThrow(() -> new IllegalStateException("Lead with id " + id + " not found"));
+  public Optional<Lead> update(UUID id, Lead updatedLead) {
+    Optional<Lead> existing = repository.findById(id);
+    if (!existing.isPresent()) {
+      return Optional.empty();
+    }
 
-    existing.setEmail(updatedLead.getEmail());
-    existing.setStatus(updatedLead.getStatus());
-    existing.setCompany(updatedLead.getCompany());
+    existing.get().setEmail(updatedLead.getEmail());
+    existing.get().setStatus(updatedLead.getStatus());
+    existing.get().setCompany(updatedLead.getCompany());
 
-    return repository.save(existing);
+    return Optional.of(repository.save(existing.get()));
   }
 
-  public void delete(UUID id) {
+  public boolean delete(UUID id) {
     Optional<Lead> existing = repository.findById(id);
     if (existing.isPresent()) {
       repository.deleteById(id);
+      return true;
     } else {
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Lead with id " + id + " not found");
+      return false;
     }
   }
 

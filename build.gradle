@@ -93,6 +93,13 @@ dependencies {
     testImplementation 'org.wiremock:wiremock-standalone:3.4.2'
 
     implementation 'org.springframework.boot:spring-boot-starter-restclient'
+
+    // Spring Cloud OpenFeign для декларативных HTTP клиентов
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign:5.0.1'
+
+    // Resilience4j для retry, circuit breaker, rate limiter
+    implementation 'io.github.resilience4j:resilience4j-spring-boot4:2.4.0'
+    implementation 'io.github.resilience4j:resilience4j-feign:2.4.0'
 }
 jte {
     sourceDirectory = file("src/main/jte").toPath()
