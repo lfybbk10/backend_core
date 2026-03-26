@@ -1,11 +1,14 @@
 package ru.mentee.power.crm.spring.rest;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.dto.CreateLeadRequest;
@@ -17,6 +20,7 @@ import ru.mentee.power.crm.spring.service.LeadService;
 @RestController
 @RequestMapping("/api/leads")
 @RequiredArgsConstructor
+@Validated
 public class LeadRestController {
 
   private final LeadService leadService;
@@ -28,7 +32,8 @@ public class LeadRestController {
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<LeadResponse> getLeadById(@PathVariable UUID id) {
+  public ResponseEntity<LeadResponse> getLeadById(
+      @PathVariable @NotNull(message = "ID лида обязателен") UUID id) {
     Optional<Lead> optionalLead = leadService.findById(id);
     return optionalLead
         .map(lead -> ResponseEntity.ok(leadMapper.toResponse(lead)))
@@ -36,7 +41,7 @@ public class LeadRestController {
   }
 
   @PostMapping
-  public ResponseEntity<LeadResponse> createLead(@RequestBody CreateLeadRequest request) {
+  public ResponseEntity<LeadResponse> createLead(@Valid @RequestBody CreateLeadRequest request) {
     Lead createdLead = leadService.createLead(leadMapper.toEntity(request));
     LeadResponse leadResponse = leadMapper.toResponse(createdLead);
     URI location = URI.create("/api/leads/" + createdLead.getId());

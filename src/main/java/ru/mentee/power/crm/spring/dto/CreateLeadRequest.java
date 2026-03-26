@@ -3,8 +3,10 @@ package ru.mentee.power.crm.spring.dto;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class CreateLeadRequest {
 
   @NotBlank(message = "Email обязателен")
