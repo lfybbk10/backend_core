@@ -25,7 +25,7 @@ class LeadServiceMockTest {
 
   @BeforeEach
   void setUp() {
-    service = new LeadService(mockRepository, null);
+    service = new LeadService(mockRepository, null, null);
   }
 
   @Test
