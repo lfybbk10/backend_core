@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -34,10 +33,8 @@ public class LeadRestController {
   @GetMapping("/{id}")
   public ResponseEntity<LeadResponse> getLeadById(
       @PathVariable @NotNull(message = "ID лида обязателен") UUID id) {
-    Optional<Lead> optionalLead = leadService.findById(id);
-    return optionalLead
-        .map(lead -> ResponseEntity.ok(leadMapper.toResponse(lead)))
-        .orElseGet(() -> ResponseEntity.notFound().build());
+    LeadResponse leadResponse = leadService.findById(id);
+    return ResponseEntity.ok(leadResponse);
   }
 
   @PostMapping
@@ -51,28 +48,12 @@ public class LeadRestController {
   @PutMapping("/{id}")
   public ResponseEntity<LeadResponse> updateLead(
       @PathVariable UUID id, @RequestBody UpdateLeadRequest request) {
-    Optional<Lead> existingLead = leadService.findById(id);
-
-    if (existingLead.isEmpty()) {
-      return ResponseEntity.notFound().build();
-    }
-
-    Lead lead = existingLead.get();
-    leadMapper.updateEntity(request, lead);
-
-    return leadService
-        .update(id, lead)
-        .map(updatedLead -> ResponseEntity.ok(leadMapper.toResponse(updatedLead)))
-        .orElseGet(() -> ResponseEntity.notFound().build());
+    return ResponseEntity.ok(leadService.update(id, request));
   }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteLead(@PathVariable UUID id) {
-    boolean success = leadService.delete(id);
-    if (success) {
-      return ResponseEntity.noContent().build();
-    } else {
-      return ResponseEntity.notFound().build();
-    }
+    leadService.delete(id);
+    return ResponseEntity.noContent().build();
   }
 }

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.mentee.power.crm.domain.DealStatus;
 import ru.mentee.power.crm.domain.Lead;
+import ru.mentee.power.crm.spring.mapper.LeadMapper;
 import ru.mentee.power.crm.spring.service.DealService;
 import ru.mentee.power.crm.spring.service.LeadService;
 
@@ -17,6 +18,7 @@ import ru.mentee.power.crm.spring.service.LeadService;
 public class DealController {
   private final DealService dealService;
   private final LeadService leadService;
+  private final LeadMapper leadMapper;
 
   @GetMapping
   public String listDeals(Model model) {
@@ -34,7 +36,7 @@ public class DealController {
   public String showConvertForm(@PathVariable UUID leadId, Model model) {
     Lead lead =
         leadService
-            .findById(leadId)
+            .findLeadById(leadId)
             .orElseThrow(() -> new IllegalArgumentException("Lead not found: " + leadId));
     model.addAttribute("lead", lead);
     return "deals/convert";

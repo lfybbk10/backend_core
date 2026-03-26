@@ -1,12 +1,12 @@
 package ru.mentee.power.crm.spring.rest;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -17,6 +17,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.dto.LeadResponse;
+import ru.mentee.power.crm.spring.exception.EntityNotFoundException;
 import ru.mentee.power.crm.spring.mapper.LeadMapper;
 import ru.mentee.power.crm.spring.service.LeadService;
 
@@ -41,7 +42,7 @@ class LeadRestControllerTest {
   @Test
   void shouldReturn404_whenGetNonExistentLead() throws Exception {
     UUID id = UUID.randomUUID();
-    when(leadService.findById(id)).thenReturn(Optional.empty());
+    when(leadService.findById(id)).thenThrow(EntityNotFoundException.class);
     mockMvc.perform(get("/api/leads/{id}", id)).andExpect(status().isNotFound());
   }
 
@@ -77,7 +78,6 @@ class LeadRestControllerTest {
   @Test
   void shouldReturn204_whenDeleteExistingLead() throws Exception {
     UUID id = UUID.randomUUID();
-    when(leadService.delete(id)).thenReturn(true);
 
     mockMvc
         .perform(delete("/api/leads/{id}", id))
@@ -88,8 +88,7 @@ class LeadRestControllerTest {
   @Test
   void shouldReturn404_whenDeleteNonExistentLead() throws Exception {
     UUID id = UUID.randomUUID();
-    when(leadService.delete(id)).thenReturn(false);
-
+    doThrow(new EntityNotFoundException("Lead", id.toString())).when(leadService).delete(id);
     mockMvc.perform(delete("/api/leads/{id}", id)).andExpect(status().isNotFound());
   }
 }
