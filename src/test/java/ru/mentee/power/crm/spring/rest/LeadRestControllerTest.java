@@ -8,7 +8,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +27,7 @@ class LeadRestControllerTest {
 
   @MockitoBean private LeadService leadService;
 
-  @MockitoBean
-  private LeadMapper leadMapper;
+  @MockitoBean private LeadMapper leadMapper;
 
   @Test
   void shouldReturn200_whenGetAllLeads() throws Exception {
