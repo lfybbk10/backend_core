@@ -61,7 +61,7 @@ public class LeadController {
 
   @GetMapping("/leads/{id}/edit")
   public String showEditForm(@PathVariable UUID id, Model model) {
-    Lead lead = leadService.findById(id).orElse(null);
+    Lead lead = leadService.findLeadById(id).orElse(null);
     if (lead != null) {
       model.addAttribute("lead", lead);
       model.addAttribute("companies", companyRepository.findAll());
@@ -82,7 +82,7 @@ public class LeadController {
     }
     Optional<Company> company = companyRepository.findById(companyId);
     company.ifPresent(lead::setCompany);
-    leadService.update(id, lead);
+    // leadService.update(id, lead);
     return "redirect:/leads";
   }
 

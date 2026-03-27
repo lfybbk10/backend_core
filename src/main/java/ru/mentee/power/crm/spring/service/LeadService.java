@@ -20,6 +20,10 @@ import ru.mentee.power.crm.domain.Company;
 import ru.mentee.power.crm.domain.Lead;
 import ru.mentee.power.crm.spring.client.EmailValidationFeignClient;
 import ru.mentee.power.crm.spring.client.EmailValidationResponse;
+import ru.mentee.power.crm.spring.dto.generated.LeadResponse;
+import ru.mentee.power.crm.spring.dto.generated.UpdateLeadRequest;
+import ru.mentee.power.crm.spring.exception.EntityNotFoundException;
+import ru.mentee.power.crm.spring.mapper.LeadMapper;
 import ru.mentee.power.crm.spring.repository.LeadRepository;
 
 @Slf4j
@@ -29,6 +33,7 @@ public class LeadService {
   private final LeadRepository repository;
   private final LeadProcessor processor;
   private final EmailValidationFeignClient emailValidationClient;
+  private final LeadMapper leadMapper;
 
   @PostConstruct
   void init() {
@@ -58,7 +63,16 @@ public class LeadService {
     return repository.findAll();
   }
 
-  public Optional<Lead> findById(UUID id) {
+  public LeadResponse findById(UUID id) {
+    Lead lead =
+        repository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Lead", id.toString()));
+
+    return leadMapper.toResponse(lead);
+  }
+
+  public Optional<Lead> findLeadById(UUID id) {
     return repository.findById(id);
   }
 
@@ -153,27 +167,21 @@ public class LeadService {
     return statusStream.toList();
   }
 
-  public Optional<Lead> update(UUID id, Lead updatedLead) {
-    Optional<Lead> existing = repository.findById(id);
-    if (!existing.isPresent()) {
-      return Optional.empty();
-    }
+  public LeadResponse update(UUID id, UpdateLeadRequest request) {
+    Lead lead =
+        repository
+            .findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Lead", id.toString()));
 
-    existing.get().setEmail(updatedLead.getEmail());
-    existing.get().setStatus(updatedLead.getStatus());
-    existing.get().setCompany(updatedLead.getCompany());
-
-    return Optional.of(repository.save(existing.get()));
+    leadMapper.updateEntity(request, lead);
+    return leadMapper.toResponse(repository.save(lead));
   }
 
-  public boolean delete(UUID id) {
-    Optional<Lead> existing = repository.findById(id);
-    if (existing.isPresent()) {
-      repository.deleteById(id);
-      return true;
-    } else {
-      return false;
+  public void delete(UUID id) {
+    if (!repository.existsById(id)) {
+      throw new EntityNotFoundException("Lead", id.toString());
     }
+    repository.deleteById(id);
   }
 
   @Transactional

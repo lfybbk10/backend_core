@@ -5,6 +5,7 @@ plugins {
     id 'gg.jte.gradle' version '3.1.15'
     id 'org.springframework.boot' version '4.0.1'
     id 'com.diffplug.spotless' version '6.25.0'
+    id 'org.openapi.generator' version '7.21.0'  // Добавить эту строку
 }
 
 application {
@@ -32,6 +33,10 @@ ext {
     springBootVersion = '3.2.0'
     mapstructVersion = '1.6.3'
     lombokMapstructBindingVersion = '0.2.0'
+
+    // OpenAPI и документация (Sprint 8)
+    openApiGeneratorVersion = '7.1.0'
+    springdocVersion = '3.0.2'
 }
 
 dependencies {
@@ -109,6 +114,9 @@ dependencies {
     // MapStruct (должен быть после Lombok в annotationProcessor)
     implementation "org.mapstruct:mapstruct:${mapstructVersion}"
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstructVersion}"
+
+    // Sprint 8: OpenAPI документация
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springdocVersion}"
 }
 jte {
     sourceDirectory = file("src/main/jte").toPath()
@@ -126,6 +134,36 @@ spotless {
         endWithNewline()
     }
 }
+def openApiSpec = file("src/main/resources/api/api-spec.yaml")
+
+openApiGenerate {
+    generatorName = "spring"
+    inputSpec = "file:///${openApiSpec.absolutePath.replace('\\', '/')}"
+    outputDir = "${buildDir}/generated"
+    apiPackage = "ru.mentee.power.crm.spring.rest.generated"
+    modelPackage = "ru.mentee.power.crm.spring.dto.generated"
+    configOptions = [
+            interfaceOnly: "true",
+            useTags: "true",
+            dateLibrary: "java8",
+            useSpringBoot4: "true",
+            useJakartaEe: "true",
+            openApiNullable: "false",
+            documentationProvider: "none"
+    ]
+}
+
+// Добавить сгенерированные файлы в sourceSets
+sourceSets {
+    main {
+        java {
+            srcDir "${buildDir}/generated/src/main/java"
+        }
+    }
+}
+
+// Привязать генерацию к компиляции
+compileJava.dependsOn tasks.openApiGenerate
 
 test {
     useJUnitPlatform()

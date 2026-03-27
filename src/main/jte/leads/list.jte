@@ -118,7 +118,11 @@
             @for(var lead : leads)
                 <tr class="border-t hover:bg-gray-50">
                     <td class="px-4 py-2">${lead.getEmail()}</td>
+                    @if(lead.getCompany() != null)
                     <td class="px-4 py-2">${lead.getCompany().getName()}</td>
+                    @else
+                    <td class="px-4 py-2"></td>
+                    @endif
                     <td class="px-4 py-2">
                         <span class="px-2 py-1 rounded text-sm bg-green-100 text-green-800">
                             ${lead.getStatus()}
