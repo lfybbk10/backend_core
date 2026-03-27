@@ -7,8 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.mentee.power.crm.domain.Lead;
-import ru.mentee.power.crm.spring.dto.CreateLeadRequest;
-import ru.mentee.power.crm.spring.dto.LeadResponse;
+import ru.mentee.power.crm.spring.dto.generated.CreateLeadRequest;
+import ru.mentee.power.crm.spring.dto.generated.LeadResponse;
 
 @SpringBootTest
 class LeadMapperTest {
@@ -36,8 +36,8 @@ class LeadMapperTest {
 
     LeadResponse leadResponse = leadMapper.toResponse(lead);
     assertThat(leadResponse).isNotNull();
-    assertThat(leadResponse.id()).isEqualTo(id);
-    assertThat(leadResponse.status()).isEqualTo("NEW");
-    assertThat(leadResponse.email()).isEqualTo("test@mail.com");
+    assertThat(leadResponse.getId()).isEqualTo(id);
+    assertThat(leadResponse.getStatus()).isEqualTo("NEW");
+    assertThat(leadResponse.getEmail()).isEqualTo("test@mail.com");
   }
 }
