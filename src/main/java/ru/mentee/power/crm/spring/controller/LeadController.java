@@ -80,9 +80,10 @@ public class LeadController {
     if (bindingResult.hasErrors()) {
       return "leads/edit";
     }
-    Optional<Company> company = companyRepository.findById(companyId);
-    company.ifPresent(lead::setCompany);
-    // leadService.update(id, lead);
+    Company company = companyRepository.findById(companyId)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Company not found"));
+
+    leadService.update(id, lead.getEmail(), company, lead.getStatus());
     return "redirect:/leads";
   }
 

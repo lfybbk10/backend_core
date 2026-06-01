@@ -16,7 +16,6 @@ import ru.mentee.power.crm.spring.rest.generated.LeadManagementApi;
 import ru.mentee.power.crm.spring.service.LeadService;
 
 @RestController
-@RequestMapping("/api/leads")
 @RequiredArgsConstructor
 @Validated
 public class LeadRestController implements LeadManagementApi {

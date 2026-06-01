@@ -177,6 +177,19 @@ public class LeadService {
     return leadMapper.toResponse(repository.save(lead));
   }
 
+  @Transactional
+  public Lead update(UUID id, String email, Company company, String status) {
+    Lead existing =
+            repository.findById(id)
+                    .orElseThrow(() -> new EntityNotFoundException("Lead", id.toString()));
+
+    existing.setEmail(email);
+    existing.setCompany(company);
+    existing.setStatus(status);
+
+    return repository.save(existing);
+  }
+
   public void delete(UUID id) {
     if (!repository.existsById(id)) {
       throw new EntityNotFoundException("Lead", id.toString());
